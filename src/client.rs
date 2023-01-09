@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+
 use crate::hop::DEFAULT_BASE_URL as URL;
 
 #[derive(Debug, Deserialize)]
@@ -10,30 +11,15 @@ struct APIResponse {
 #[derive(Clone)]
 pub struct APIClient {
     pub token: String,
-    // pub token: &str,
-
-    // options: i32,
-    // agent: i32,
-
-    // pub auth_type: i32,
-    // pub url: &'static str,
 }
 
 impl APIClient {
-    pub fn get_auth_type() {}
-
     pub fn new(
         base_url: &str,
         token: &str,
     ) -> APIClient {
         return APIClient {
             token: token.to_owned(),
-            // token,
-
-            // options: 1,
-            // agent: 1,
-            // auth_type: 1,
-            // url: base_url,
         };
     }
 
@@ -84,7 +70,6 @@ impl APIClient {
 
     async fn request(
         &self,
-        url: &str,
     ) {
         let mut response = reqwest::get(URL).await.unwrap();
 

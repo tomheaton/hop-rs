@@ -1,14 +1,12 @@
-use serde::{Deserialize, Serialize, Deserializer, de};
+use serde::{Deserialize, Serialize};
 
 use crate::client::APIClient;
 use crate::hop::DEFAULT_BASE_URL as URL;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct APIResponse<T> {
-// pub struct APIResponse<T: de::DeserializeOwned> {
     pub success: bool,
     pub data: Option<T>,
-    // pub data: Vec<T>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
