@@ -13,7 +13,8 @@ extern crate rand;
 use hop::Hop;
 use rand::Rng;
 
-fn main() {
+#[tokio::main]
+async fn main() {
     let my_token = "ptk_xxx";
     let hop = Hop::new(my_token);
 
@@ -21,7 +22,7 @@ fn main() {
     hop.projects.create_secret(
         "RANDOM_NUMBER",
         rand::thread_rng().gen_range(0, 100).to_string(),
-    );
+    ).await.unwrap();
 }
 ```
 

@@ -70,6 +70,7 @@ impl APIClient {
 
     async fn request(
         &self,
+        url: &str,
     ) {
         let mut response = reqwest::get(URL).await.unwrap();
 
@@ -78,7 +79,7 @@ impl APIClient {
             return;
         }
 
-        let data_struct: APIResponse = response.json().await.unwrap();
-        println!("response: {:?}", data_struct);
+        let data: APIResponse = response.json().await.unwrap();
+        println!("response: {:?}", data);
     }
 }

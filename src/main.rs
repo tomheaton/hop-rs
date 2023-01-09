@@ -29,9 +29,12 @@ async fn main() {
     hop.projects.create_secret(
         "RANDOM_NUMBER",
         rand::thread_rng().gen_range(0..100).to_string(),
-    ).await;
+    ).await.unwrap();
 
-    hop.projects.get_members().await;
+    // Example: Getting a project's members
+    let members = hop.projects.get_members().await.unwrap();
+    println!("members: {:?}", members);
 
-    // hop.client.get().await;
+    // Example: Creating a project token
+    hop.projects.create_token(1).await.unwrap();
 }

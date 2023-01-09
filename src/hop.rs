@@ -31,7 +31,7 @@ impl Hop {
             token,
         );
 
-        let hop = Hop {
+        return Hop {
             client,
 
             channels: Channels::new(),
@@ -41,7 +41,5 @@ impl Hop {
             registry: Registry::new(),
             users: Users::new(),
         };
-
-        return hop;
     }
 }
