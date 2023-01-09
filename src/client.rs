@@ -1,6 +1,5 @@
 use serde::{Deserialize, Serialize};
-
-const URL: &str = "https://tomheaton.dev/api/hello";
+use crate::hop::DEFAULT_BASE_URL as URL;
 
 #[derive(Debug, Deserialize)]
 struct APIResponse {
@@ -8,22 +7,33 @@ struct APIResponse {
     message: String,
 }
 
-#[derive(Clone, Copy)]
+#[derive(Clone)]
 pub struct APIClient {
-    options: i32,
-    agent: i32,
+    pub token: String,
+    // pub token: &str,
 
-    pub auth_type: i32,
-    pub url: i32,
+    // options: i32,
+    // agent: i32,
+
+    // pub auth_type: i32,
+    // pub url: &'static str,
 }
 
 impl APIClient {
-    pub fn new() -> APIClient {
+    pub fn get_auth_type() {}
+
+    pub fn new(
+        base_url: &str,
+        token: &str,
+    ) -> APIClient {
         return APIClient {
-            options: 1,
-            agent: 1,
-            auth_type: 1,
-            url: 1,
+            token: token.to_owned(),
+            // token,
+
+            // options: 1,
+            // agent: 1,
+            // auth_type: 1,
+            // url: base_url,
         };
     }
 
@@ -76,7 +86,7 @@ impl APIClient {
         &self,
         url: &str,
     ) {
-        let mut response = reqwest::get(url).await.unwrap();
+        let mut response = reqwest::get(URL).await.unwrap();
 
         if response.status() != 200 {
             println!("status: {}", response.status());
