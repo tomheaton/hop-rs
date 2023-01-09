@@ -11,7 +11,7 @@ extern crate hop;
 extern crate rand;
 
 use hop::Hop;
-use rand;
+use rand::Rng;
 
 fn main() {
     let my_token = "ptk_xxx";
