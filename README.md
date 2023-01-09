@@ -18,7 +18,7 @@ fn main() {
     let hop = Hop::new(my_token);
 
     // Example: Creating a project secret
-    hop.projects.secrets.create(
+    hop.projects.create_secret(
         "RANDOM_NUMBER",
         rand::thread_rng().gen_range(0, 100).to_string(),
     );

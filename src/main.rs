@@ -1,8 +1,13 @@
+extern crate dotenv;
 // extern crate hop;
 extern crate rand;
 
-use hop::Hop;
+use std::env;
+
+use dotenv::dotenv;
 use rand::Rng;
+
+use hop::Hop;
 
 pub mod client;
 pub mod hop;
@@ -12,8 +17,12 @@ pub mod sdks;
 async fn main() {
     println!("hop-rs");
 
-    let my_token = "ptk_xxx";
-    let hop = Hop::new(my_token);
+    dotenv().ok();
+
+    // let my_token = "ptk_xxx";
+    let my_token = env::var("PROJECT_TOKEN").expect("PROJECT_TOKEN needed!");
+    println!("my_token here {}", my_token.as_str());
+    let hop = Hop::new(my_token.as_str());
 
     // Example: Creating a project secret
     hop.projects.create_secret(
