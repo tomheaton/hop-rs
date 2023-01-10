@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 use crate::client::APIClient;
-use crate::hop::DEFAULT_BASE_URL as URL;
+use crate::client::DEFAULT_BASE_URL as URL;
 
 #[derive(Debug)]
 pub struct APIError;
@@ -27,7 +27,7 @@ pub struct Secret {
 pub struct Token {}
 
 pub struct Projects {
-    token: String,
+    pub token: String,
 }
 
 impl Projects {
@@ -44,26 +44,9 @@ impl Projects {
     ) -> Result<serde_json::Value, APIError> {
         println!("Getting all project members");
 
-        let url = format!("{}{}", URL, "/v1/projects/@this/members");
-
-        let client = reqwest::Client::new();
-        let mut response = client
-            .get(url.as_str())
-            .header("Authorization", self.token.as_str())
-            .send()
-            .await
-            .unwrap();
-
-        if response.status() != 200 {
-            println!("status: {}", response.status());
-            return Err(APIError);
-        }
-
-        // let data: APIResponse<Vec<Members>> = response.json().await.unwrap();
-        let data: serde_json::Value = response.json().await.unwrap();
-        println!("response: {:?}", data);
-
-        return Ok(data);
+        return APIClient::new(
+            self.token.as_str(),
+        ).get("/v1/projects/@this/members").await;
     }
 
     pub fn get_current_member(
@@ -72,10 +55,14 @@ impl Projects {
         println!("Getting current project member")
     }
 
-    pub fn get_tokens(
+    pub async fn get_tokens(
         &self,
-    ) {
+    ) -> Result<serde_json::Value, APIError> {
         println!("Getting all project tokens");
+
+        return APIClient::new(
+            self.token.as_str(),
+        ).get("/v1/projects/@this/tokens").await;
     }
 
     pub async fn create_token(
@@ -84,31 +71,12 @@ impl Projects {
     ) -> Result<serde_json::Value, APIError> {
         println!("Creating a project token with flags: {}", flags);
 
-        // let url = format!("{}{}", URL, "/v1/projects/@this/tokens");
-        let url = format!("{}{}", URL, "/v1/projects/@this/tokens");
-
-        let client = reqwest::Client::new();
-        let mut response = client
-            .put(url.as_str())
-            .header("Authorization", self.token.as_str())
-            .header("Content-Type", "text/plain")
-            .json(&serde_json::json!({
-                "flags": flags,
-            }))
-            .send()
-            .await
-            .unwrap();
-
-        if response.status() != 200 {
-            println!("status: {}", response.status());
-            return Err(APIError);
-        }
-
-        // let data: APIResponse<Token> = response.json().await.unwrap();
-        let data: serde_json::Value = response.json().await.unwrap();
-        println!("response: {:?}", data);
-
-        return Ok(data);
+        return APIClient::new(
+            self.token.as_str(),
+        ).post(
+            "/v1/projects/@this/tokens",
+            &serde_json::json!(flags),
+        ).await;
     }
 
     pub fn delete_token(
@@ -118,10 +86,14 @@ impl Projects {
         println!("Deleting a project token with id: {}", id);
     }
 
-    pub fn get_secrets(
+    pub async fn get_secrets(
         &self,
-    ) {
+    ) -> Result<serde_json::Value, APIError> {
         println!("Getting all project secrets");
+
+        return APIClient::new(
+            self.token.as_str(),
+        ).get("/v1/projects/@this/tokens").await;
     }
 
     pub async fn create_secret(
@@ -131,28 +103,12 @@ impl Projects {
     ) -> Result<serde_json::Value, APIError> {
         println!("Creating a project secret with name: {} and value: {}", name, value);
 
-        let url = format!("{}{}/{}", URL, "/v1/projects/@this/secrets", name);
-
-        let client = reqwest::Client::new();
-        let mut response = client
-            .put(url.as_str())
-            .header("Authorization", self.token.as_str())
-            .header("Content-Type", "text/plain")
-            .body(value)
-            .send()
-            .await
-            .unwrap();
-
-        if response.status() != 200 {
-            println!("status: {}", response.status());
-            return Err(APIError);
-        }
-
-        // let data: APIResponse<Secret> = response.json().await.unwrap();
-        let data: serde_json::Value = response.json().await.unwrap();
-        println!("response: {:?}", data);
-
-        return Ok(data);
+        return APIClient::new(
+            self.token.as_str(),
+        ).put(
+            format!("{}/{}", "/v1/projects/@this/secrets", name).as_str(),
+            value,
+        ).await;
     }
 
     pub fn delete_secret(

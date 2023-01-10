@@ -1,6 +1,10 @@
 use serde::{Deserialize, Serialize};
 
-use crate::hop::DEFAULT_BASE_URL as URL;
+use crate::sdks::projects::APIError;
+
+// pub const DEFAULT_BASE_URL: &str = "https://tomheaton.dev/api/hello";
+pub const DEFAULT_BASE_URL: &str = "https://api.hop.io";
+pub const BASE_URL: &str = "https://api.hop.io";
 
 #[derive(Debug, Deserialize)]
 struct APIResponse {
@@ -15,71 +19,141 @@ pub struct APIClient {
 
 impl APIClient {
     pub fn new(
-        base_url: &str,
         token: &str,
     ) -> APIClient {
         return APIClient {
-            token: token.to_owned(),
+            token: token.to_string(),
         };
     }
 
     pub async fn get(
         &self,
-    ) {
-        // return self.request(URL).await;
-        self.request(URL).await;
-    }
-
-    pub async fn post(
-        &self
-    ) {
-        // return self.request(URL).await;
-        self.request(URL).await;
-    }
-
-    pub async fn put(
-        &self
-    ) {
-        // return self.request(URL).await;
-        self.request(URL).await;
-    }
-
-    pub async fn patch(
-        &self
-    ) {
-        // return self.request(URL).await;
-        self.request(URL).await;
-    }
-
-    pub async fn delete(
-        &self
-    ) {
-        // return self.request(URL).await;
-        self.request(URL).await;
-    }
-
-    pub fn raw(
-        &self
-    ) {
-        return self.execute_request();
-    }
-
-    fn execute_request(
-        &self
-    ) {}
-
-    async fn request(
-        &self,
         url: &str,
-    ) {
-        let mut response = reqwest::get(URL).await.unwrap();
+    ) -> Result<serde_json::Value, APIError> {
+        let client = reqwest::Client::new();
+
+        let mut response = client
+            .get(format!("{}{}", BASE_URL, url).as_str())
+            .header("Authorization", self.token.as_str())
+            .send()
+            .await
+            .unwrap();
 
         if response.status() != 200 {
             println!("status: {}", response.status());
-            return;
+            return Err(APIError);
         }
 
-        let data: APIResponse = response.json().await.unwrap();
+        // let data: APIResponse<T> = response.json().await.unwrap();
+        let data: serde_json::Value = response.json().await.unwrap();
         println!("response: {:?}", data);
+
+        return Ok(data);
+    }
+
+    pub async fn post<T: Serialize>(
+        &self,
+        url: &str,
+        data: T,
+    ) -> Result<serde_json::Value, APIError> {
+        let client = reqwest::Client::new();
+
+        let mut response = client
+            .put(format!("{}{}", BASE_URL, url).as_str())
+            .header("Authorization", self.token.as_str())
+            .json(&data)
+            .send()
+            .await
+            .unwrap();
+
+        if response.status() != 200 {
+            println!("status: {}", response.status());
+            return Err(APIError);
+        }
+
+        // let data: APIResponse<T> = response.json().await.unwrap();
+        let data: serde_json::Value = response.json().await.unwrap();
+        println!("response: {:?}", data);
+
+        return Ok(data);
+    }
+
+    // pub async fn put<T: Serialize>(
+    pub async fn put(
+        &self,
+        url: &str,
+        data: String,
+    ) -> Result<serde_json::Value, APIError> {
+        let client = reqwest::Client::new();
+
+        let mut response = client
+            .put(format!("{}{}", BASE_URL, url).as_str())
+            .header("Authorization", self.token.as_str())
+            .header("Content-Type", "text/plain")
+            .body(data)
+            .send()
+            .await
+            .unwrap();
+
+        if response.status() != 200 {
+            println!("status: {}", response.status());
+            return Err(APIError);
+        }
+
+        // let data: APIResponse<T> = response.json().await.unwrap();
+        let data: serde_json::Value = response.json().await.unwrap();
+        println!("response: {:?}", data);
+
+        return Ok(data);
+    }
+
+    pub async fn patch(
+        &self,
+        url: &str,
+    ) -> Result<serde_json::Value, APIError> {
+        let client = reqwest::Client::new();
+
+        let mut response = client
+            .get(format!("{}{}", BASE_URL, url).as_str())
+            .header("Authorization", self.token.as_str())
+            .send()
+            .await
+            .unwrap();
+
+        if response.status() != 200 {
+            println!("status: {}", response.status());
+            return Err(APIError);
+        }
+
+        // let data: APIResponse<T> = response.json().await.unwrap();
+        let data: serde_json::Value = response.json().await.unwrap();
+        println!("response: {:?}", data);
+
+        return Ok(data);
+    }
+
+    pub async fn delete(
+        &self,
+        url: &str,
+    ) -> Result<serde_json::Value, APIError> {
+        let client = reqwest::Client::new();
+
+        let mut response = client
+            .get(format!("{}{}", BASE_URL, url).as_str())
+            .header("Authorization", self.token.as_str())
+            .send()
+            .await
+            .unwrap();
+
+        if response.status() != 200 {
+            println!("status: {}", response.status());
+            return Err(APIError);
+        }
+
+        // let data: APIResponse<T> = response.json().await.unwrap();
+        let data: serde_json::Value = response.json().await.unwrap();
+        println!("response: {:?}", data);
+
+        return Ok(data);
     }
 }

@@ -6,9 +6,6 @@ use crate::sdks::projects::Projects;
 use crate::sdks::registry::Registry;
 use crate::sdks::users::Users;
 
-// pub const DEFAULT_BASE_URL: &str = "https://tomheaton.dev/api/hello";
-pub const DEFAULT_BASE_URL: &str = "https://api.hop.io";
-
 pub struct Hop {
     pub client: APIClient,
 
@@ -27,7 +24,6 @@ impl Hop {
         println!("Creating a new Hop client with token {}", token);
 
         let client = APIClient::new(
-            DEFAULT_BASE_URL,
             token,
         );
 

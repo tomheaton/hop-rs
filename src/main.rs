@@ -32,9 +32,9 @@ async fn main() {
     ).await.unwrap();
 
     // Example: Getting a project's members
-    let members = hop.projects.get_members().await.unwrap();
-    println!("members: {:?}", members);
+    // let members = hop.projects.get_members().await.unwrap();
+    // println!("members: {:?}", members);
 
     // Example: Creating a project token
-    hop.projects.create_token(1).await.unwrap();
+    // hop.projects.create_token(1).await.unwrap();
 }
