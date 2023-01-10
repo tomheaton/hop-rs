@@ -12,10 +12,24 @@ pub struct APIResponse<T> {
     pub data: Option<T>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
-pub struct Members {}
+#[derive(Deserialize, Debug)]
+pub struct Role {
+    flags: i64,
+    id: String,
+    name: String,
+}
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Deserialize, Debug)]
+pub struct Member {
+    id: String,
+    joined_at: String,
+    mfa_enabled: bool,
+    name: String,
+    username: String,
+    role: Role,
+}
+
+#[derive(Deserialize, Debug)]
 pub struct Secret {
     id: String,
     name: String,
@@ -23,7 +37,7 @@ pub struct Secret {
     created_at: String,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Deserialize, Debug)]
 pub struct Token {}
 
 pub struct Projects {
@@ -41,18 +55,36 @@ impl Projects {
 
     pub async fn get_members(
         &self,
-    ) -> Result<serde_json::Value, APIError> {
+    ) -> Result<Vec<Member>, APIError> {
         println!("Getting all project members");
 
-        return APIClient::new(
+        let response = APIClient::new(
             self.token.as_str(),
-        ).get("/v1/projects/@this/members").await;
+        ).get(
+            "/v1/projects/@this/members"
+        ).await.unwrap();
+
+        let members = response["data"]["members"].clone();
+
+        return Ok(serde_json::from_value(members).unwrap());
     }
 
-    pub fn get_current_member(
+    pub async fn get_current_member(
         &self,
-    ) {
-        println!("Getting current project member")
+        project_id: &str,
+    ) -> Result<Member, APIError> {
+        println!("Getting current project member");
+
+        let response = APIClient::new(
+            self.token.as_str(),
+        ).get(
+            // format!("/v1/projects/{}/members/@me", project_id).as_str()
+            "/v1/projects/@this/members/@me"
+        ).await.unwrap();
+
+        let member = response["data"]["member"].clone();
+
+        return Ok(serde_json::from_value(member).unwrap());
     }
 
     pub async fn get_tokens(
@@ -62,7 +94,9 @@ impl Projects {
 
         return APIClient::new(
             self.token.as_str(),
-        ).get("/v1/projects/@this/tokens").await;
+        ).get(
+            "/v1/projects/@this/tokens"
+        ).await;
     }
 
     pub async fn create_token(
@@ -75,15 +109,21 @@ impl Projects {
             self.token.as_str(),
         ).post(
             "/v1/projects/@this/tokens",
-            &serde_json::json!(flags),
+            serde_json::json!(flags),
         ).await;
     }
 
-    pub fn delete_token(
+    pub async fn delete_token(
         &self,
         id: &str,
-    ) {
+    ) -> Result<serde_json::Value, APIError> {
         println!("Deleting a project token with id: {}", id);
+
+        return APIClient::new(
+            self.token.as_str(),
+        ).delete(
+            format!("/v1/projects/@this/tokens/{}", id).as_str(),
+        ).await;
     }
 
     pub async fn get_secrets(
@@ -93,7 +133,9 @@ impl Projects {
 
         return APIClient::new(
             self.token.as_str(),
-        ).get("/v1/projects/@this/tokens").await;
+        ).get(
+            "/v1/projects/@this/secrets"
+        ).await;
     }
 
     pub async fn create_secret(
@@ -106,15 +148,21 @@ impl Projects {
         return APIClient::new(
             self.token.as_str(),
         ).put(
-            format!("{}/{}", "/v1/projects/@this/secrets", name).as_str(),
+            format!("/v1/projects/@this/secrets/{}", name).as_str(),
             value,
         ).await;
     }
 
-    pub fn delete_secret(
+    pub async fn delete_secret(
         &self,
         id: &str,
-    ) {
+    ) -> Result<serde_json::Value, APIError> {
         println!("Deleting a project secret with id: {}", id);
+
+        return APIClient::new(
+            self.token.as_str(),
+        ).delete(
+            format!("/v1/projects/@this/secrets/{}", id).as_str(),
+        ).await;
     }
 }

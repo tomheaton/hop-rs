@@ -32,7 +32,7 @@ impl APIClient {
     ) -> Result<serde_json::Value, APIError> {
         let client = reqwest::Client::new();
 
-        let mut response = client
+        let response = client
             .get(format!("{}{}", BASE_URL, url).as_str())
             .header("Authorization", self.token.as_str())
             .send()
@@ -44,9 +44,8 @@ impl APIClient {
             return Err(APIError);
         }
 
-        // let data: APIResponse<T> = response.json().await.unwrap();
         let data: serde_json::Value = response.json().await.unwrap();
-        println!("response: {:?}", data);
+        println!("response: {}", serde_json::to_string_pretty(&data).unwrap());
 
         return Ok(data);
     }
@@ -58,7 +57,7 @@ impl APIClient {
     ) -> Result<serde_json::Value, APIError> {
         let client = reqwest::Client::new();
 
-        let mut response = client
+        let response = client
             .put(format!("{}{}", BASE_URL, url).as_str())
             .header("Authorization", self.token.as_str())
             .json(&data)
@@ -71,14 +70,12 @@ impl APIClient {
             return Err(APIError);
         }
 
-        // let data: APIResponse<T> = response.json().await.unwrap();
         let data: serde_json::Value = response.json().await.unwrap();
-        println!("response: {:?}", data);
+        println!("response: {}", serde_json::to_string_pretty(&data).unwrap());
 
         return Ok(data);
     }
 
-    // pub async fn put<T: Serialize>(
     pub async fn put(
         &self,
         url: &str,
@@ -86,7 +83,7 @@ impl APIClient {
     ) -> Result<serde_json::Value, APIError> {
         let client = reqwest::Client::new();
 
-        let mut response = client
+        let response = client
             .put(format!("{}{}", BASE_URL, url).as_str())
             .header("Authorization", self.token.as_str())
             .header("Content-Type", "text/plain")
@@ -100,9 +97,8 @@ impl APIClient {
             return Err(APIError);
         }
 
-        // let data: APIResponse<T> = response.json().await.unwrap();
         let data: serde_json::Value = response.json().await.unwrap();
-        println!("response: {:?}", data);
+        println!("response: {}", serde_json::to_string_pretty(&data).unwrap());
 
         return Ok(data);
     }
@@ -113,7 +109,7 @@ impl APIClient {
     ) -> Result<serde_json::Value, APIError> {
         let client = reqwest::Client::new();
 
-        let mut response = client
+        let response = client
             .get(format!("{}{}", BASE_URL, url).as_str())
             .header("Authorization", self.token.as_str())
             .send()
@@ -125,9 +121,8 @@ impl APIClient {
             return Err(APIError);
         }
 
-        // let data: APIResponse<T> = response.json().await.unwrap();
         let data: serde_json::Value = response.json().await.unwrap();
-        println!("response: {:?}", data);
+        println!("response: {}", serde_json::to_string_pretty(&data).unwrap());
 
         return Ok(data);
     }
@@ -138,7 +133,7 @@ impl APIClient {
     ) -> Result<serde_json::Value, APIError> {
         let client = reqwest::Client::new();
 
-        let mut response = client
+        let response = client
             .get(format!("{}{}", BASE_URL, url).as_str())
             .header("Authorization", self.token.as_str())
             .send()
@@ -150,9 +145,8 @@ impl APIClient {
             return Err(APIError);
         }
 
-        // let data: APIResponse<T> = response.json().await.unwrap();
         let data: serde_json::Value = response.json().await.unwrap();
-        println!("response: {:?}", data);
+        println!("response: {}", serde_json::to_string_pretty(&data).unwrap());
 
         return Ok(data);
     }

@@ -1,5 +1,5 @@
-extern crate dotenv;
 // extern crate hop;
+extern crate dotenv;
 extern crate rand;
 
 use std::env;
@@ -8,6 +8,7 @@ use dotenv::dotenv;
 use rand::Rng;
 
 use hop::Hop;
+use crate::sdks::projects::Member;
 
 pub mod client;
 pub mod hop;
@@ -21,19 +22,22 @@ async fn main() {
 
     // let my_token = "ptk_xxx";
     let my_token = env::var("PROJECT_TOKEN").expect("PROJECT_TOKEN needed!");
-    println!("my_token here {}", my_token.as_str());
-    let my_token = my_token.as_str();
-    let hop = Hop::new(my_token);
+    let hop = Hop::new(my_token.as_str());
 
     // Example: Creating a project secret
-    hop.projects.create_secret(
-        "RANDOM_NUMBER",
-        rand::thread_rng().gen_range(0..100).to_string(),
-    ).await.unwrap();
+    // hop.projects.create_secret(
+    //     "RANDOM_NUMBER_69",
+    //     rand::thread_rng().gen_range(0..100).to_string(),
+    // ).await.unwrap();
+
+    // let r = hop.projects.delete_secret("RANDOM_NUMBER_69").await.unwrap();
+    // let r = hop.projects.delete_secret("ps_OTcxNTM4ODY2MzcxMDEwNjM").await.unwrap();
+    // println!("{:?}", r);
 
     // Example: Getting a project's members
-    // let members = hop.projects.get_members().await.unwrap();
-    // println!("members: {:?}", members);
+    let members = hop.projects.get_members().await.unwrap();
+    // println!("members: {:?}", members["data"]["members"]);
+    println!("members: {:#?}", members);
 
     // Example: Creating a project token
     // hop.projects.create_token(1).await.unwrap();
