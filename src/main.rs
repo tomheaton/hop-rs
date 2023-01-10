@@ -21,7 +21,8 @@ async fn main() {
     dotenv().ok();
 
     // let my_token = "ptk_xxx";
-    let my_token = env::var("PROJECT_TOKEN").expect("PROJECT_TOKEN needed!");
+    // let my_token = env::var("PROJECT_TOKEN").expect("PROJECT_TOKEN needed!");
+    let my_token = env::var("PERSONAL_TOKEN").expect("PERSONAL_TOKEN needed!");
     let hop = Hop::new(my_token.as_str());
 
     // Example: Creating a project secret
@@ -35,10 +36,19 @@ async fn main() {
     // println!("{:?}", r);
 
     // Example: Getting a project's members
-    let members = hop.projects.get_members().await.unwrap();
+    // let members = hop.projects.get_members().await.unwrap();
     // println!("members: {:?}", members["data"]["members"]);
-    println!("members: {:#?}", members);
+    // println!("members: {:#?}", members);
 
     // Example: Creating a project token
     // hop.projects.create_token(1).await.unwrap();
+
+    // Example: user @me
+    // let me = hop.users.get_me().await.unwrap();
+    // println!("me: {:#?}", me);
+
+    let pats = hop.users.get_pats().await.unwrap();
+    println!("pats: {:#?}", pats);
+
+
 }

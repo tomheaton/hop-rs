@@ -23,6 +23,13 @@ impl Hop {
     ) -> Hop {
         println!("Creating a new Hop client with token {}", token);
 
+        let is_ptk = token.starts_with("ptk_");
+        let is_pat = token.starts_with("pat_");
+
+        if !is_ptk && !is_pat {
+            panic!("Invalid token type. Must be a project token or a personal access token.");
+        }
+
         let client = APIClient::new(
             token,
         );
@@ -35,7 +42,7 @@ impl Hop {
             pipe: Pipe::new(),
             projects: Projects::new(token),
             registry: Registry::new(),
-            users: Users::new(),
+            users: Users::new(token),
         };
     }
 }
