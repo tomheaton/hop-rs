@@ -20,7 +20,7 @@ pub struct Pat {
     pub id: String,
     pub pat: String,
     pub created_at: String,
-    pub name: String,
+    pub name: Option<String>,
 }
 
 pub struct Users {
@@ -63,9 +63,9 @@ impl Users {
             "/v1/users/@me/pats"
         ).await.unwrap();
 
-        let me = response["data"]["pats"].clone();
+        let pats = response["data"]["pats"].clone();
 
-        return Ok(serde_json::from_value(me).unwrap());
+        return Ok(serde_json::from_value(pats).unwrap());
     }
 
     pub async fn create_pat(
@@ -74,18 +74,20 @@ impl Users {
     ) -> Result<Pat, APIError> {
         println!("Creating a user pat with name: {}", name);
 
+        // TODO: fix invalid route error (actually just dumb)
         let response = APIClient::new(
             self.token.as_str(),
         ).post(
-            "/v1/users/@me",
+            "/v1/users/@me/pats",
+            // serde_json::json!(name),
             serde_json::json!({
                 "name": name,
             }),
         ).await.unwrap();
 
-        let me = response["data"]["pat"].clone();
+        let pat = response["data"]["pat"].clone();
 
-        return Ok(serde_json::from_value(me).unwrap());
+        return Ok(serde_json::from_value(pat).unwrap());
     }
 
     pub async fn delete_pat(
@@ -94,16 +96,13 @@ impl Users {
     ) -> Result<(), APIError> {
         println!("Deleting a user pat with id: {}", id);
 
-        // let response = APIClient::new(
+        // TODO: fix invalid route error (actually just dumb)
         APIClient::new(
             self.token.as_str(),
         ).delete(
             format!("/v1/users/@me/pats/{}", id).as_str()
         ).await.unwrap();
 
-        // let me = response["data"]["user"].clone();
-
-        // return Ok(serde_json::from_value(me).unwrap());
         return Ok(());
     }
 }

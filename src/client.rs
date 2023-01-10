@@ -1,3 +1,4 @@
+use std::borrow::Borrow;
 use serde::{Deserialize, Serialize};
 
 use crate::sdks::projects::APIError;
@@ -35,12 +36,14 @@ impl APIClient {
         let response = client
             .get(format!("{}{}", BASE_URL, url).as_str())
             .header("Authorization", self.token.as_str())
+            .header("Content-Type", "application/json")
             .send()
             .await
             .unwrap();
 
         if response.status() != 200 {
-            println!("status: {}", response.status());
+            // println!("status: {}", response.status());
+            println!("response: {}", response.text().await.unwrap());
             return Err(APIError);
         }
 
@@ -57,16 +60,21 @@ impl APIClient {
     ) -> Result<serde_json::Value, APIError> {
         let client = reqwest::Client::new();
 
+        println!("{}", format!("{}{}", BASE_URL, url).as_str());
+        println!("{}", serde_json::to_string_pretty(&data).unwrap());
+
         let response = client
             .put(format!("{}{}", BASE_URL, url).as_str())
             .header("Authorization", self.token.as_str())
+            .header("Content-Type", "application/json")
             .json(&data)
             .send()
             .await
             .unwrap();
 
         if response.status() != 200 {
-            println!("status: {}", response.status());
+            // println!("status: {}", response.status());
+            println!("response: {}", response.text().await.unwrap());
             return Err(APIError);
         }
 
@@ -93,7 +101,8 @@ impl APIClient {
             .unwrap();
 
         if response.status() != 200 {
-            println!("status: {}", response.status());
+            // println!("status: {}", response.status());
+            println!("response: {}", response.text().await.unwrap());
             return Err(APIError);
         }
 
@@ -117,7 +126,8 @@ impl APIClient {
             .unwrap();
 
         if response.status() != 200 {
-            println!("status: {}", response.status());
+            // println!("status: {}", response.status());
+            println!("response: {}", response.text().await.unwrap());
             return Err(APIError);
         }
 
@@ -141,7 +151,8 @@ impl APIClient {
             .unwrap();
 
         if response.status() != 200 {
-            println!("status: {}", response.status());
+            // println!("status: {}", response.status());
+            println!("response: {}", response.text().await.unwrap());
             return Err(APIError);
         }
 

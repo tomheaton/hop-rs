@@ -1,4 +1,4 @@
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 
 use crate::client::APIClient;
 use crate::client::DEFAULT_BASE_URL as URL;
@@ -6,7 +6,7 @@ use crate::client::DEFAULT_BASE_URL as URL;
 #[derive(Debug)]
 pub struct APIError;
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Deserialize, Debug)]
 pub struct APIResponse<T> {
     pub success: bool,
     pub data: Option<T>,
@@ -109,7 +109,10 @@ impl Projects {
             self.token.as_str(),
         ).post(
             "/v1/projects/@this/tokens",
-            serde_json::json!(flags),
+            // serde_json::json!(flags),
+            serde_json::json!({
+                "flags": flags
+            }),
         ).await;
     }
 

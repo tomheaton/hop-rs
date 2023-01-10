@@ -37,7 +37,6 @@ async fn main() {
 
     // Example: Getting a project's members
     // let members = hop.projects.get_members().await.unwrap();
-    // println!("members: {:?}", members["data"]["members"]);
     // println!("members: {:#?}", members);
 
     // Example: Creating a project token
@@ -50,5 +49,11 @@ async fn main() {
     let pats = hop.users.get_pats().await.unwrap();
     println!("pats: {:#?}", pats);
 
+    // let pat = hop.users.create_pat("gonkie").await.unwrap();
+    // println!("pat: {:#?}", pat);
 
+    hop.users.delete_pat("pid_OTc0MTgyNjk5NTU3OTI5MDk").await.unwrap();
+
+    // let pats = hop.users.get_pats().await.unwrap();
+    // println!("pats: {:#?}", pats);
 }
