@@ -6,6 +6,19 @@ use crate::sdks::projects::APIError;
 #[derive(Deserialize, Debug)]
 pub struct Image {}
 
+#[derive(Deserialize, Debug)]
+pub struct Manifest {
+    pub tag: String,
+    pub digest: Digest,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct Digest {
+    pub digest: String,
+    pub size: i64,
+    pub uploaded: String,
+}
+
 pub struct Registry {
     pub token: String,
 }
@@ -21,7 +34,8 @@ impl Registry {
 
     pub async fn get_images(
         &self
-    ) -> Result<Vec<Image>, APIError> {
+        // ) -> Result<Vec<Image>, APIError> {
+    ) -> Result<Vec<String>, APIError> {
         println!("Getting all images");
 
         let response = APIClient::new(
