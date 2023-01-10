@@ -1,6 +1,7 @@
 // extern crate hop;
 extern crate dotenv;
 extern crate rand;
+extern crate core;
 
 use std::env;
 

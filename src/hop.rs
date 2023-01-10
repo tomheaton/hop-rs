@@ -38,10 +38,10 @@ impl Hop {
             client,
 
             channels: Channels::new(),
-            ignite: Ignite::new(),
+            ignite: Ignite::new(token),
             pipe: Pipe::new(),
             projects: Projects::new(token),
-            registry: Registry::new(),
+            registry: Registry::new(token),
             users: Users::new(token),
         };
     }
