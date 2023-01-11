@@ -1,3 +1,7 @@
+use serde::Serialize;
+
+use crate::types::APIError;
+
 // pub const DEFAULT_BASE_URL: &str = "https://tomheaton.dev/api/hello";
 pub const DEFAULT_BASE_URL: &str = "https://api.hop.io";
 pub const BASE_URL: &str = "https://api.hop.io";

@@ -17,7 +17,7 @@ pub struct APIResponse<T> {
 }
 
 #[derive(Debug, Deserialize)]
-struct APIResponseOld {
+pub struct APIResponseOld {
     success: bool,
     message: String,
 }

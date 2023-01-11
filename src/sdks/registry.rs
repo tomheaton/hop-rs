@@ -1,5 +1,6 @@
 use crate::client::APIClient;
-use crate::sdks::projects::APIError;
+use crate::types::APIError;
+use crate::types::registry::Image;
 
 pub struct Registry {
     pub token: String,

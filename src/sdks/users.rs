@@ -1,7 +1,7 @@
 use serde::Deserialize;
 
 use crate::client::APIClient;
-use crate::sdks::projects::APIError;
+use crate::types::APIError;
 
 #[derive(Deserialize, Debug)]
 pub struct User {
