@@ -1,7 +1,6 @@
 // extern crate hop;
 extern crate dotenv;
 extern crate rand;
-extern crate core;
 
 use std::env;
 
@@ -9,11 +8,13 @@ use dotenv::dotenv;
 use rand::Rng;
 
 use hop::Hop;
+
 use crate::sdks::projects::Member;
 
 pub mod client;
 pub mod hop;
 pub mod sdks;
+pub mod types;
 
 #[tokio::main]
 async fn main() {
