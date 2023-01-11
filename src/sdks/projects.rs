@@ -1,44 +1,5 @@
-use serde::Deserialize;
-
 use crate::client::APIClient;
 use crate::client::DEFAULT_BASE_URL as URL;
-
-#[derive(Debug)]
-pub struct APIError;
-
-#[derive(Deserialize, Debug)]
-pub struct APIResponse<T> {
-    pub success: bool,
-    pub data: Option<T>,
-}
-
-#[derive(Deserialize, Debug)]
-pub struct Role {
-    flags: i64,
-    id: String,
-    name: String,
-}
-
-#[derive(Deserialize, Debug)]
-pub struct Member {
-    id: String,
-    joined_at: String,
-    mfa_enabled: bool,
-    name: String,
-    username: String,
-    role: Role,
-}
-
-#[derive(Deserialize, Debug)]
-pub struct Secret {
-    id: String,
-    name: String,
-    digest: String,
-    created_at: String,
-}
-
-#[derive(Deserialize, Debug)]
-pub struct Token {}
 
 pub struct Projects {
     pub token: String,

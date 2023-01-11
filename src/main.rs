@@ -9,8 +9,6 @@ use rand::Rng;
 
 use hop::Hop;
 
-use crate::sdks::projects::Member;
-
 pub mod client;
 pub mod hop;
 pub mod sdks;

@@ -1,16 +1,6 @@
-use serde::{Deserialize, Serialize};
-
-use crate::sdks::projects::APIError;
-
 // pub const DEFAULT_BASE_URL: &str = "https://tomheaton.dev/api/hello";
 pub const DEFAULT_BASE_URL: &str = "https://api.hop.io";
 pub const BASE_URL: &str = "https://api.hop.io";
-
-#[derive(Debug, Deserialize)]
-struct APIResponse {
-    success: bool,
-    message: String,
-}
 
 #[derive(Clone)]
 pub struct APIClient {
