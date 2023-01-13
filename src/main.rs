@@ -46,14 +46,15 @@ async fn main() {
     // let me = hop.users.get_me().await.unwrap();
     // println!("me: {:#?}", me);
 
-    let pats = hop.users.get_pats().await.unwrap();
-    println!("pats: {:#?}", pats);
+    // let pats = hop.users.get_pats().await.unwrap();
+    // println!("pats: {:#?}", pats);
 
     // let pat = hop.users.create_pat("gonkie").await.unwrap();
     // println!("pat: {:#?}", pat);
 
-    hop.users.delete_pat("pid_OTc0MTgyNjk5NTU3OTI5MDk").await.unwrap();
+    // hop.users.delete_pat("pid_OTc0MTgyNjk5NTU3OTI5MDk").await.unwrap();
 
+    hop.ignite.create_deployment().await.unwrap();
     // let pats = hop.users.get_pats().await.unwrap();
     // println!("pats: {:#?}", pats);
 }
