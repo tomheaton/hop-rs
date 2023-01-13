@@ -13,19 +13,24 @@ impl Ignite {
         };
     }
 
-    pub async fn get_deployments() -> () {
+    pub async fn get_deployments(
+        &self
+    ) -> () {
         println!("Getting all ignite deployments");
         panic!("not implemented!");
     }
 
     pub async fn create_deployment(
+        &self,
         deployment: &Deployment,
     ) -> () {
         println!("Creating an ignite deployment: {:?}", deployment);
-        panic!("not implemented!");
+        // panic!("not implemented!");
     }
 
-    pub async fn delete_deployment() -> () {
+    pub async fn delete_deployment(
+        &self,
+    ) -> () {
         println!("Deleting an ignite deployment");
         panic!("not implemented!");
     }
@@ -33,34 +38,34 @@ impl Ignite {
 
 impl Deployment {
     pub fn new(
-        id: String,
-        name: String,
-        build_id: String,
-        active_build: String,
-        active_rollout: String,
-        latest_rollout: String,
-        created_at: String,
-        entrypoint: Vec<String>,
+        id: &str,
+        name: &str,
+        build_id: &str,
+        active_build: &str,
+        active_rollout: &str,
+        latest_rollout: &str,
+        created_at: &str,
+        entrypoint: Vec<&str>,
         target_container_count: i64,
         container_count: i64,
         running_container_count: i64,
-        metadata: String,
-        config: Config,
+        metadata: &str,
+        config: Option<Config>,
     ) -> Deployment {
         return Deployment {
-            id,
-            name,
-            build_id,
-            active_build,
-            active_rollout,
-            latest_rollout,
-            created_at,
-            entrypoint,
+            id: id.to_owned(),
+            name: name.to_owned(),
+            build_id: build_id.to_owned(),
+            active_build: active_build.to_owned(),
+            active_rollout: active_rollout.to_owned(),
+            latest_rollout: latest_rollout.to_owned(),
+            created_at: created_at.to_owned(),
+            entrypoint: entrypoint.map(|s| s.to_owned()).collect(),
             target_container_count,
             container_count,
             running_container_count,
-            metadata,
-            config,
+            metadata: metadata.to_owned(),
+            config: config.unwrap(),
         };
     }
 }

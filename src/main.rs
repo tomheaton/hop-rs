@@ -8,6 +8,7 @@ use dotenv::dotenv;
 use rand::Rng;
 
 use hop::Hop;
+use crate::types::ignite::Deployment;
 
 pub mod client;
 pub mod hop;
@@ -54,7 +55,21 @@ async fn main() {
 
     // hop.users.delete_pat("pid_OTc0MTgyNjk5NTU3OTI5MDk").await.unwrap();
 
-    hop.ignite.create_deployment().await.unwrap();
+    hop.ignite.create_deployment(
+        Deployment::new(
+            "1", "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            vec!["8"],
+            9,
+            10,
+            11,
+            "12",
+            )
+    ).await.unwrap();
     // let pats = hop.users.get_pats().await.unwrap();
     // println!("pats: {:#?}", pats);
 }
