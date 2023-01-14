@@ -8,6 +8,7 @@ use dotenv::dotenv;
 use rand::Rng;
 
 use hop::Hop;
+
 use crate::types::ignite::Deployment;
 
 pub mod client;
@@ -32,30 +33,9 @@ async fn main() {
     //     rand::thread_rng().gen_range(0..100).to_string(),
     // ).await.unwrap();
 
-    // let r = hop.projects.delete_secret("RANDOM_NUMBER_69").await.unwrap();
-    // let r = hop.projects.delete_secret("ps_OTcxNTM4ODY2MzcxMDEwNjM").await.unwrap();
-    // println!("{:?}", r);
-
-    // Example: Getting a project's members
-    // let members = hop.projects.get_members().await.unwrap();
-    // println!("members: {:#?}", members);
-
-    // Example: Creating a project token
-    // hop.projects.create_token(1).await.unwrap();
-
-    // Example: user @me
-    // let me = hop.users.get_me().await.unwrap();
-    // println!("me: {:#?}", me);
-
-    // let pats = hop.users.get_pats().await.unwrap();
-    // println!("pats: {:#?}", pats);
-
-    // let pat = hop.users.create_pat("gonkie").await.unwrap();
-    // println!("pat: {:#?}", pat);
-
-    // hop.users.delete_pat("pid_OTc0MTgyNjk5NTU3OTI5MDk").await.unwrap();
-
+    // TESTING:
     hop.ignite.create_deployment(
+        // TODO: fix me
         Deployment::new(
             "1", "2",
             "3",
@@ -68,8 +48,6 @@ async fn main() {
             10,
             11,
             "12",
-            )
+        )
     ).await.unwrap();
-    // let pats = hop.users.get_pats().await.unwrap();
-    // println!("pats: {:#?}", pats);
 }

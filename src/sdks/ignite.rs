@@ -45,6 +45,7 @@ impl Deployment {
         active_rollout: &str,
         latest_rollout: &str,
         created_at: &str,
+        // TODO: fix this
         entrypoint: Vec<&str>,
         target_container_count: i64,
         container_count: i64,
@@ -60,6 +61,7 @@ impl Deployment {
             active_rollout: active_rollout.to_owned(),
             latest_rollout: latest_rollout.to_owned(),
             created_at: created_at.to_owned(),
+            // TODO: fix this
             entrypoint: entrypoint.map(|s| s.to_owned()).collect(),
             target_container_count,
             container_count,
