@@ -1,11 +1,11 @@
 // extern crate hop;
 extern crate dotenv;
-extern crate rand;
+// extern crate rand;
 
 use std::env;
 
 use dotenv::dotenv;
-use rand::Rng;
+// use rand::Rng;
 
 use hop::Hop;
 
@@ -34,20 +34,20 @@ async fn main() {
     // ).await.unwrap();
 
     // TESTING:
-    hop.ignite.create_deployment(
-        // TODO: fix me
-        Deployment::new(
-            "1", "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            vec!["8"],
-            9,
-            10,
-            11,
-            "12",
-        )
-    ).await.unwrap();
+    // hop.ignite.create_deployment(
+    //     // TODO: fix me
+    //     Deployment::new(
+    //         "1", "2",
+    //         "3",
+    //         "4",
+    //         "5",
+    //         "6",
+    //         "7",
+    //         vec!["8"],
+    //         9,
+    //         10,
+    //         11,
+    //         "12",
+    //     )
+    // ).await.unwrap();
 }
