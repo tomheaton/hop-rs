@@ -1,4 +1,4 @@
-use crate::types::ignite::{Config, Deployment};
+use crate::types::ignite::{Config, Deployment, DeploymentConfig};
 
 pub struct Ignite {
     pub token: String,
@@ -22,7 +22,8 @@ impl Ignite {
 
     pub async fn create_deployment(
         &self,
-        deployment: Deployment,
+        // deployment: Deployment,
+        deployment: DeploymentConfig,
     ) -> () {
         println!("Creating an ignite deployment: {:?}", deployment);
         // panic!("not implemented!");

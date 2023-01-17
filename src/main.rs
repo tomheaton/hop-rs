@@ -2,14 +2,16 @@
 extern crate dotenv;
 extern crate rand;
 
+use std::collections::HashMap;
 use std::env;
 
 use dotenv::dotenv;
 use rand::Rng;
+use tokio::runtime::Runtime;
 
 use hop::Hop;
 
-use crate::types::ignite::Deployment;
+use crate::types::ignite::{Deployment, DeploymentConfig, Image, Resources, RestartPolicy, RuntimeType};
 
 pub mod client;
 pub mod hop;
@@ -55,24 +57,29 @@ async fn main() {
     // println!("pat: {:#?}", pat);
 
     // hop.users.delete_pat("pid_OTc0MTgyNjk5NTU3OTI5MDk").await.unwrap();
+    // let pats = hop.users.get_pats().await.unwrap();
+    // println!("pats: {:#?}", pats);
 
+    // Example: Creating a deployment
     hop.ignite.create_deployment(
-        Deployment::new(
-            "test",
-            "test",
-            "test",
-            "test",
-            "test",
-            "test",
-            "test",
-            vec!["a", "b", "c"],
-            10,
-            10,
-            10,
-            "test",
+        DeploymentConfig::new(
+            "postgres",
+            RuntimeType::Ephemeral,
+            None,
+            Image::new(
+                "postgres"
+            ),
+            Some(HashMap::from([
+                ("POSTGRES_PASSWORD", "password")
+            ])),
+            Resources::new(
+                1,
+                "1GB",
+                None,
+            ),
+            RestartPolicy::Never,
+            None,
             None,
         ),
     ).await.unwrap();
-    // let pats = hop.users.get_pats().await.unwrap();
-    // println!("pats: {:#?}", pats);
 }
