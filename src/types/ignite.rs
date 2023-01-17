@@ -2,9 +2,11 @@ use std::collections::HashMap;
 
 use serde::{Deserialize, Serialize};
 
+#[derive(Debug)]
 pub struct Resources {
     pub vcpu: i64,
     pub ram: String,
+    // TODO: use array instead of vector?
     pub vgpu: Vec<Vgpu>,
 }
 
@@ -16,26 +18,44 @@ impl Resources {
     ) -> Resources {
         return Resources {
             vcpu,
+            // TODO: evaluate ram validity here as well?
             ram: ram.to_owned(),
             vgpu,
         };
     }
 }
 
-enum VgpuType {
+#[derive(Debug, Serialize, Deserialize)]
+pub enum VgpuType {
+    #[serde(rename = "a400")]
     A400,
 }
 
+#[derive(Debug)]
 pub struct Vgpu {
     pub vgpu_type: VgpuType,
     pub count: i64,
 }
 
+impl Vgpu {
+    pub fn new(
+        vgpu_type: VgpuType,
+        count: i64,
+    ) -> Vgpu {
+        return Vgpu {
+            vgpu_type,
+            count,
+        };
+    }
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub enum ContainerStrategy {
     #[serde(rename = "manual")]
     Manual,
 }
 
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub enum RuntimeType {
     #[serde(rename = "ephemeral")]
     Ephemeral,
@@ -45,6 +65,7 @@ pub enum RuntimeType {
     Stateful,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub enum RestartPolicy {
     #[serde(rename = "never")]
     Never,
@@ -54,17 +75,23 @@ pub enum RestartPolicy {
     OnFailure,
 }
 
+#[derive(Debug)]
 pub struct Image {
     name: String,
-    // auth: Option<String>,
+    auth: Option<String>,
+    gh_repo: Option<String>,
 }
 
 impl Image {
     pub fn new(
-        name: &str
+        name: &str,
+        auth: Option<&str>,
+        gh_repo: Option<&str>,
     ) -> Image {
         return Image {
             name: name.to_owned(),
+            auth: auth.map(|s| s.to_owned()),
+            gh_repo: gh_repo.map(|s| s.to_owned()),
         };
     }
 }
@@ -79,7 +106,7 @@ pub struct DeploymentConfig {
     cmd: Option<Vec<String>>,
     image: Image,
     env: Option<HashMap<String, String>>,
-    resources: String,
+    resources: Resources,
     restart_policy: RestartPolicy,
     volume: Option<String>,
     entrypoint: Option<Vec<String>>,
@@ -94,7 +121,7 @@ impl DeploymentConfig {
         cmd: Option<Vec<String>>,
         image: Image,
         env: Option<HashMap<&str, &str>>,
-        resources: &str,
+        resources: Resources,
         restart_policy: RestartPolicy,
         volume: Option<&str>,
         entrypoint: Option<Vec<&str>>,
@@ -102,12 +129,12 @@ impl DeploymentConfig {
         return DeploymentConfig {
             name: name.to_owned(),
             container_strategy: ContainerStrategy::Manual,
-            runtime_type,
+            runtime_type: runtime_type.clone(),
             version: "12-12-2022".to_owned(),
             cmd,
             image,
-            env: env.map(|env| env.into_iter().map(|(k, v)| (k.to_owned(), v.to_owned())).collect()),
-            resources: resources.to_owned(),
+            env: env.map(|e| e.into_iter().map(|(k, v)| (k.to_owned(), v.to_owned())).collect()),
+            resources,
             restart_policy,
             volume: match runtime_type {
                 RuntimeType::Stateful => volume.map(|v| v.to_owned()),

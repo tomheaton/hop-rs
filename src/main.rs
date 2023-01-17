@@ -7,16 +7,17 @@ use std::env;
 
 use dotenv::dotenv;
 use rand::Rng;
-use tokio::runtime::Runtime;
 
 use hop::Hop;
 
-use crate::types::ignite::{Deployment, DeploymentConfig, Image, Resources, RestartPolicy, RuntimeType};
+use crate::types::ignite::{DeploymentConfig, Image, Resources, RestartPolicy, RuntimeType, Vgpu, VgpuType};
+use crate::utils::get_bytes;
 
 pub mod client;
 pub mod hop;
 pub mod sdks;
 pub mod types;
+pub mod utils;
 
 #[tokio::main]
 async fn main() {
@@ -60,6 +61,18 @@ async fn main() {
     // let pats = hop.users.get_pats().await.unwrap();
     // println!("pats: {:#?}", pats);
 
+    // let r = Resources::new(
+    //     1,
+    //     "1GB",
+    //     vec![
+    //         Vgpu::new(VgpuType::A400, 1),
+    //     ],
+    // );
+    // println!("r: {:#?}", r);
+
+    // let x = get_bytes("69GB");
+    // println!("x: {:#?}", x);
+
     // Example: Creating a deployment
     hop.ignite.create_deployment(
         DeploymentConfig::new(
@@ -67,7 +80,9 @@ async fn main() {
             RuntimeType::Ephemeral,
             None,
             Image::new(
-                "postgres"
+                "postgres",
+                None,
+                None,
             ),
             Some(HashMap::from([
                 ("POSTGRES_PASSWORD", "password")
@@ -75,11 +90,16 @@ async fn main() {
             Resources::new(
                 1,
                 "1GB",
-                None,
+                vec![
+                    Vgpu::new(
+                        VgpuType::A400,
+                        1,
+                    ),
+                ],
             ),
             RestartPolicy::Never,
             None,
             None,
         ),
-    ).await.unwrap();
+    ).await;//.unwrap();
 }
