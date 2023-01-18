@@ -75,23 +75,48 @@ pub enum RestartPolicy {
     OnFailure,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
+struct Auth {
+    pub username: String,
+    pub password: String,
+}
+
+impl Auth {
+    pub fn new(
+        username: &str,
+        password: &str,
+    ) -> Auth {
+        return Auth {
+            username: username.to_owned(),
+            password: password.to_owned(),
+        };
+    }
+}
+
+struct ImageGHRepo {
+    pub repo_id: i64,
+    pub full_name: String,
+    pub branch: String,
+}
+
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Image {
-    name: String,
-    auth: Option<String>,
-    gh_repo: Option<String>,
+    pub name: Option<String>,
+    pub auth: Option<Auth>,
+    pub gh_repo: Option<ImageGHRepo>,
 }
 
 impl Image {
     pub fn new(
-        name: &str,
-        auth: Option<&str>,
-        gh_repo: Option<&str>,
+        name: Option<&str>,
+        auth: Option<Auth>,
+        gh_repo: Option<ImageGHRepo>,
     ) -> Image {
         return Image {
-            name: name.to_owned(),
-            auth: auth.map(|s| s.to_owned()),
-            gh_repo: gh_repo.map(|s| s.to_owned()),
+            name: name.map(|s| s.to_owned()),
+            auth,
+            gh_repo,
         };
     }
 }

@@ -61,18 +61,6 @@ async fn main() {
     // let pats = hop.users.get_pats().await.unwrap();
     // println!("pats: {:#?}", pats);
 
-    // let r = Resources::new(
-    //     1,
-    //     "1GB",
-    //     vec![
-    //         Vgpu::new(VgpuType::A400, 1),
-    //     ],
-    // );
-    // println!("r: {:#?}", r);
-
-    // let x = get_bytes("69GB");
-    // println!("x: {:#?}", x);
-
     // Example: Creating a deployment
     hop.ignite.create_deployment(
         DeploymentConfig::new(
@@ -80,22 +68,28 @@ async fn main() {
             RuntimeType::Ephemeral,
             None,
             Image::new(
-                "postgres",
+                Some("postgres"),
                 None,
                 None,
             ),
+            /*Image {
+                name: Some("postgres".to_owned()),
+                auth: None,
+                gh_repo: None,
+            },*/
             Some(HashMap::from([
                 ("POSTGRES_PASSWORD", "password")
             ])),
             Resources::new(
                 1,
                 "1GB",
-                vec![
+                vec![],
+                /*vec![
                     Vgpu::new(
                         VgpuType::A400,
                         1,
-                    ),
-                ],
+                    )
+                ],*/
             ),
             RestartPolicy::Never,
             None,
