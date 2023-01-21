@@ -1,8 +1,14 @@
-pub struct Pipe {}
+pub struct Pipe {
+    pub token: String,
+}
 
 impl Pipe {
-    pub fn new() -> Pipe {
-        return Pipe {};
+    pub fn new(
+        token: &str,
+    ) -> Pipe {
+        return Pipe {
+            token: token.to_owned(),
+        };
     }
 
     // Rooms:
@@ -10,7 +16,7 @@ impl Pipe {
     pub async fn get_rooms(
         &self
     ) -> () {
-        println!("Getting all ignite deployments");
+        println!("Getting all rooms");
         panic!("not implemented!");
     }
 
@@ -19,21 +25,21 @@ impl Pipe {
     /*pub async fn get_room(
         &self
     ) -> () {
-        println!("Getting all ignite deployments");
+        println!("Getting a room");
         panic!("not implemented!");
     }*/
 
     pub async fn create(
         &self
     ) -> () {
-        println!("Getting all ignite deployments");
+        println!("Creating a room");
         panic!("not implemented!");
     }
 
     pub async fn delete(
         &self
     ) -> () {
-        println!("Getting all ignite deployments");
+        println!("Deleting a room");
         panic!("not implemented!");
     }
 }

@@ -19,7 +19,7 @@ pub struct Hop {
 
 impl Hop {
     pub fn new(
-        token: &str
+        token: &str,
     ) -> Hop {
         println!("Creating a new Hop client with token {}", token);
 
@@ -37,9 +37,9 @@ impl Hop {
         return Hop {
             client,
 
-            channels: Channels::new(),
+            channels: Channels::new(token),
             ignite: Ignite::new(token),
-            pipe: Pipe::new(),
+            pipe: Pipe::new(token),
             projects: Projects::new(token),
             registry: Registry::new(token),
             users: Users::new(token),

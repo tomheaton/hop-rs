@@ -1,5 +1,5 @@
 use crate::client::APIClient;
-use crate::client::DEFAULT_BASE_URL as URL;
+use crate::client::BASE_URL as URL;
 use crate::types::APIError;
 use crate::types::projects::Member;
 
