@@ -55,6 +55,13 @@ impl Channels {
         panic!("not implemented!");
     }
 
+    pub async fn subscribe_token(
+        &self
+    ) -> () {
+        println!("Getting channel subscription token");
+        panic!("not implemented!");
+    }
+
     pub async fn get_tokens(
         &self
     ) -> () {
