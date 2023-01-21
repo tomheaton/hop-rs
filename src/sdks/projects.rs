@@ -16,6 +16,8 @@ impl Projects {
         };
     }
 
+    // Projects:
+
     pub async fn get_members(
         &self,
     ) -> Result<Vec<Member>, APIError> {
@@ -49,6 +51,8 @@ impl Projects {
 
         return Ok(serde_json::from_value(member).unwrap());
     }
+
+    // Tokens:
 
     pub async fn get_tokens(
         &self,
@@ -91,6 +95,8 @@ impl Projects {
             format!("/v1/projects/@this/tokens/{}", id).as_str(),
         ).await;
     }
+
+    // Secrets:
 
     pub async fn get_secrets(
         &self,

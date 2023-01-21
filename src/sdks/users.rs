@@ -36,6 +36,8 @@ impl Users {
         };
     }
 
+    // Me:
+
     pub async fn get_me(
         &self,
     ) -> Result<User, APIError> {
@@ -51,6 +53,8 @@ impl Users {
 
         return Ok(serde_json::from_value(me).unwrap());
     }
+
+    // Pats:
 
     pub async fn get_pats(
         &self,

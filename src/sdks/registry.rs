@@ -15,6 +15,8 @@ impl Registry {
         };
     }
 
+    // Images:
+
     pub async fn get_images(
         &self
         // ) -> Result<Vec<Image>, APIError> {
@@ -32,6 +34,21 @@ impl Registry {
         return Ok(serde_json::from_value(images).unwrap());
     }
 
+    pub async fn delete_image(
+        &self,
+        image: &str,
+    ) -> Result<(), APIError> {
+        println!("Deleting an image with image: {}", image);
+
+        APIClient::new(
+            self.token.as_str(),
+        ).delete(
+            format!("/v1/registry/images/{}", image).as_str(),
+        ).await.unwrap();
+
+        return Ok(());
+    }
+
     pub async fn get_manifest(
         &self,
         image: &str,
@@ -47,20 +64,5 @@ impl Registry {
         let manifest = response["data"]["image"].clone();
 
         return Ok(serde_json::from_value(manifest).unwrap());
-    }
-
-    pub async fn delete_image(
-        &self,
-        image: &str,
-    ) -> Result<(), APIError> {
-        println!("Deleting an image with image: {}", image);
-
-        APIClient::new(
-            self.token.as_str(),
-        ).delete(
-            format!("/v1/registry/images/{}", image).as_str(),
-        ).await.unwrap();
-
-        return Ok(());
     }
 }
