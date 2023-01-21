@@ -2,6 +2,13 @@
 
 hop sdk rust
 
+## Installation
+
+```toml
+[dependencies]
+hop = "0.0.0"
+```
+
 ## Usage
 
 Create a [project token](https://docs.hop.io/reference/project_tokens) or personal access token.

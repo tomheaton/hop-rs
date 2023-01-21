@@ -1,6 +1,6 @@
 [package]
 name = "hop"
-description = "Hop Rust SDK"
+description = "hop sdk rust"
 authors = ["tomheaton"]
 version = "0.0.0"
 edition = "2021"
