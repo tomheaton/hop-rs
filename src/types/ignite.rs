@@ -76,7 +76,7 @@ pub enum RestartPolicy {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-struct Auth {
+pub struct Auth {
     pub username: String,
     pub password: String,
 }
@@ -93,12 +93,12 @@ impl Auth {
     }
 }
 
-struct ImageGHRepo {
+#[derive(Debug, Serialize, Deserialize)]
+pub struct ImageGHRepo {
     pub repo_id: i64,
     pub full_name: String,
     pub branch: String,
 }
-
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Image {

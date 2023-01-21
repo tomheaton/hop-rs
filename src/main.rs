@@ -1,5 +1,5 @@
-// extern crate hop;
 extern crate dotenv;
+extern crate hop;
 extern crate rand;
 
 use std::collections::HashMap;
@@ -9,19 +9,12 @@ use dotenv::dotenv;
 use rand::Rng;
 
 use hop::Hop;
-
-use crate::types::ignite::{DeploymentConfig, Image, Resources, RestartPolicy, RuntimeType, Vgpu, VgpuType};
-use crate::utils::get_bytes;
-
-pub mod client;
-pub mod hop;
-pub mod sdks;
-pub mod types;
-pub mod utils;
+use hop::types::ignite::{DeploymentConfig, Image, Resources, RestartPolicy, RuntimeType};
+use hop::utils::get_bytes;
 
 #[tokio::main]
 async fn main() {
-    println!("hop-rs");
+    println!("hop");
 
     dotenv().ok();
 
@@ -32,7 +25,7 @@ async fn main() {
 
     // Example: Creating a project secret
     // hop.projects.create_secret(
-    //     "RANDOM_NUMBER_69",
+    //     "RANDOM_NUMBER",
     //     rand::thread_rng().gen_range(0..100).to_string(),
     // ).await.unwrap();
 
@@ -54,7 +47,7 @@ async fn main() {
     // let pats = hop.users.get_pats().await.unwrap();
     // println!("pats: {:#?}", pats);
 
-    // let pat = hop.users.create_pat("gonkie").await.unwrap();
+    // let pat = hop.users.create_pat("tomheaton").await.unwrap();
     // println!("pat: {:#?}", pat);
 
     // hop.users.delete_pat("pid_OTc0MTgyNjk5NTU3OTI5MDk").await.unwrap();
