@@ -56,21 +56,11 @@ impl APIClient {
     ) -> Result<serde_json::Value, APIError> {
         let client = reqwest::Client::new();
 
-        let r = client
-            .put(format!("{}{}", BASE_URL, url).as_str())
-            .header("Authorization", self.token.as_str())
-            .header("Content-Type", "application/json")
-            .json(&data).build().unwrap();
-
-        // print r
-        // println!("{:?}", r.headers().to_owned());
-        println!("{:?}", r.body().unwrap().to_owned());
-
         println!("{}", format!("{}{}", BASE_URL, url).as_str());
         println!("{}", serde_json::to_string_pretty(&data).unwrap());
 
         let response = client
-            .put(format!("{}{}", BASE_URL, url).as_str())
+            .post(format!("{}{}", BASE_URL, url).as_str())
             .header("Authorization", self.token.as_str())
             .header("Content-Type", "application/json")
             .json(&data)
@@ -125,7 +115,7 @@ impl APIClient {
         let client = reqwest::Client::new();
 
         let response = client
-            .get(format!("{}{}", BASE_URL, url).as_str())
+            .patch(format!("{}{}", BASE_URL, url).as_str())
             .header("Authorization", self.token.as_str())
             .send()
             .await
@@ -143,28 +133,34 @@ impl APIClient {
         return Ok(data);
     }
 
+    // TODO: fix panic
     pub async fn delete(
         &self,
         url: &str,
-    ) -> Result<serde_json::Value, APIError> {
+    ) -> Result<(), APIError> {
         let client = reqwest::Client::new();
 
         let response = client
-            .get(format!("{}{}", BASE_URL, url).as_str())
+            .delete(format!("{}{}", BASE_URL, url).as_str())
             .header("Authorization", self.token.as_str())
             .send()
             .await
             .unwrap();
 
-        if response.status() != 200 {
+        // TODO: check other functions for correct status code
+        if response.status() != 204 {
             // println!("status: {}", response.status());
             println!("response: {}", response.text().await.unwrap());
+
+            // TODO: parse json response here, because no data returned from 204 DELETE
+            // let data: serde_json::Value = response.json().await.unwrap();
+            // println!("response: {}", serde_json::to_string_pretty(&data).unwrap());
+
             return Err(APIError);
         }
 
-        let data: serde_json::Value = response.json().await.unwrap();
-        println!("response: {}", serde_json::to_string_pretty(&data).unwrap());
+        println!("delete successful");
 
-        return Ok(data);
+        return Ok(());
     }
 }
