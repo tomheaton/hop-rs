@@ -52,17 +52,28 @@ impl Channels {
         return Ok(serde_json::from_value(channel).unwrap());
     }
 
+    // FIXME: ?
     pub async fn create_channel(
         &self
-    ) -> () {
-        println!("Creating a channel");
-        panic!("not implemented!");
+    ) -> Result<Channel, APIError> {
+        println!("Creating a  channel");
+
+        let response = APIClient::new(
+            self.token.as_str(),
+        ).post(
+            "/v1/channels",
+            serde_json::json!({}),
+        ).await.unwrap();
+
+        let channel = response["data"]["channel"].clone();
+
+        return Ok(serde_json::from_value(channel).unwrap());
     }
 
     pub async fn delete_channel(
         &self,
         channel_id: &str,
-    ) -> Result<serde_json::Value, APIError> {
+    ) -> Result<(), APIError> {
         println!("Deleting a channel");
 
         return APIClient::new(
@@ -189,7 +200,7 @@ impl Channels {
     pub async fn delete_token(
         &self,
         token_id: &str,
-    ) -> Result<serde_json::Value, APIError> {
+    ) -> Result<(), APIError> {
         println!("Deleting a channel token");
 
         return APIClient::new(

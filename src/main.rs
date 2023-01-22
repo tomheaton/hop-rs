@@ -27,7 +27,10 @@ async fn main() {
     // let channel = hop.channels.get_token("leap_token_c185NjU1YmUxZTJkYTZkYjNiOWE5Njc0NGIxZjcyMDliOF8xMDE3NTU1MTE3Nzc2MzYzNzk").await.unwrap();
     // println!("channel: {:#?}", channel);
 
-    let token = hop.channels.delete_token("leap_token_c19mMjA1Y2UwNDNiZmVlNGQ0ZDliYjYyODdiNTZkZWQ5ZV8xMDE3Njg4MTE0NTQyNDY5NDc").await.unwrap();
+    // hop.channels.delete_token("leap_token_c19mMGY2ZjcxOGRmOTk1ODUxZjYyZThlNzRlYjUwZTMyOF8xMDE3NzQ4NDEzNTQxNDE3Mzc").await.unwrap();
+
+    let channel = hop.channels.create_channel().await.unwrap();
+    println!("channel: {:#?}", channel);
 
     // let token = hop.channels.create_token().await.unwrap();
     // println!("token: {:#?}", token);

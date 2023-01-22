@@ -78,7 +78,7 @@ impl Projects {
             "/v1/projects/@this/tokens",
             // serde_json::json!(flags),
             serde_json::json!({
-                "flags": flags
+                "flags": flags,
             }),
         ).await;
     }
@@ -86,7 +86,7 @@ impl Projects {
     pub async fn delete_token(
         &self,
         id: &str,
-    ) -> Result<serde_json::Value, APIError> {
+    ) -> Result<(), APIError> {
         println!("Deleting a project token with id: {}", id);
 
         return APIClient::new(
@@ -128,7 +128,7 @@ impl Projects {
     pub async fn delete_secret(
         &self,
         id: &str,
-    ) -> Result<serde_json::Value, APIError> {
+    ) -> Result<(), APIError> {
         println!("Deleting a project secret with id: {}", id);
 
         return APIClient::new(

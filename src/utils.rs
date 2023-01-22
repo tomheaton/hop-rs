@@ -29,3 +29,5 @@ pub fn get_bytes(ram: &str) -> i64 {
 
     return size * multiplier;
 }
+
+// TODO: make id parsers here

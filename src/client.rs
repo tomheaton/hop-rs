@@ -49,6 +49,7 @@ impl APIClient {
         return Ok(data);
     }
 
+    // FIXME: ?
     pub async fn post<T: Serialize>(
         &self,
         url: &str,
@@ -133,7 +134,6 @@ impl APIClient {
         return Ok(data);
     }
 
-    // TODO: fix panic
     pub async fn delete(
         &self,
         url: &str,
