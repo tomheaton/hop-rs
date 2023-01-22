@@ -21,9 +21,10 @@ pub struct Project {}
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Channel {
     pub id: String,
-    pub project: Project,
+    // pub project: Project,
     pub state: HashMap<String, String>,
-    pub capabilities: i64,
+    // pub capabilities: i64,
     pub created_at: String,
+    #[serde(rename = "type")]
     pub channel_type: ChannelType,
 }

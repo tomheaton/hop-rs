@@ -19,9 +19,15 @@ async fn main() {
     dotenv().ok();
 
     // let my_token = "ptk_xxx";
-    // let my_token = env::var("PROJECT_TOKEN").expect("PROJECT_TOKEN needed!");
-    let my_token = env::var("PERSONAL_TOKEN").expect("PERSONAL_TOKEN needed!");
+    let my_token = env::var("PROJECT_TOKEN").expect("PROJECT_TOKEN needed!");
+    // let my_token = env::var("PERSONAL_TOKEN").expect("PERSONAL_TOKEN needed!");
     let hop = Hop::new(my_token.as_str());
+
+    // let channels = hop.channels.get_channels().await.unwrap();
+    // println!("channels: {:#?}", channels);
+
+    let channel = hop.channels.get_stats("test").await.unwrap();
+    println!("channel: {:#?}", channel);
 
     // Example: Creating a project secret
     // hop.projects.create_secret(
@@ -55,7 +61,7 @@ async fn main() {
     // println!("pats: {:#?}", pats);
 
     // Example: Creating a deployment
-    hop.ignite.create_deployment(
+    /*hop.ignite.create_deployment(
         DeploymentConfig::new(
             "postgres",
             RuntimeType::Ephemeral,
@@ -88,5 +94,5 @@ async fn main() {
             None,
             None,
         ),
-    ).await;//.unwrap();
+    ).await;//.unwrap();*/
 }

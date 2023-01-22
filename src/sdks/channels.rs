@@ -1,3 +1,9 @@
+use std::collections::HashMap;
+
+use crate::client::APIClient;
+use crate::types::APIError;
+use crate::types::channels::Channel;
+
 pub struct Channels {
     pub token: String,
 }
@@ -15,16 +21,35 @@ impl Channels {
 
     pub async fn get_channels(
         &self
-    ) -> () {
+    ) -> Result<Vec<Channel>, APIError> {
         println!("Getting all channels");
-        panic!("not implemented!");
+
+        let response = APIClient::new(
+            self.token.as_str(),
+        ).get(
+            "/v1/channels"
+        ).await.unwrap();
+
+        let channels = response["data"]["channels"].clone();
+
+        return Ok(serde_json::from_value(channels).unwrap());
     }
 
     pub async fn get_channel(
-        &self
-    ) -> () {
+        &self,
+        channel_id: &str,
+    ) -> Result<Channel, APIError> {
         println!("Getting a channel");
-        panic!("not implemented!");
+
+        let response = APIClient::new(
+            self.token.as_str(),
+        ).get(
+            format!("/v1/channels/{}", channel_id).as_str()
+        ).await.unwrap();
+
+        let channel = response["data"]["channel"].clone();
+
+        return Ok(serde_json::from_value(channel).unwrap());
     }
 
     pub async fn create_channel(
@@ -42,10 +67,21 @@ impl Channels {
     }
 
     pub async fn get_stats(
-        &self
-    ) -> () {
+        &self,
+        channel_id: &str,
+        // TODO: improve this (ask hop about this)
+    ) -> Result<HashMap<String, i64>, APIError> {
         println!("Getting a channel's stats");
-        panic!("not implemented!");
+
+        let response = APIClient::new(
+            self.token.as_str(),
+        ).get(
+            format!("/v1/channels/{}/stats", channel_id).as_str()
+        ).await.unwrap();
+
+        let stats = response["data"]["stats"].clone();
+
+        return Ok(serde_json::from_value(stats).unwrap());
     }
 
     pub async fn subscribe_tokens(
