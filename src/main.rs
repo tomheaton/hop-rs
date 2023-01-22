@@ -8,9 +8,7 @@ use std::env;
 use dotenv::dotenv;
 use rand::Rng;
 
-use hop::Hop;
-use hop::types::ignite::{DeploymentConfig, Image, Resources, RestartPolicy, RuntimeType};
-use hop::utils::get_bytes;
+use hop::{get_bytes, Hop, types::ignite::{DeploymentConfig, Image, Resources, RestartPolicy, RuntimeType}};
 
 #[tokio::main]
 async fn main() {
@@ -26,8 +24,13 @@ async fn main() {
     // let channels = hop.channels.get_channels().await.unwrap();
     // println!("channels: {:#?}", channels);
 
-    let channel = hop.channels.get_stats("test").await.unwrap();
-    println!("channel: {:#?}", channel);
+    // let channel = hop.channels.get_token("leap_token_c185NjU1YmUxZTJkYTZkYjNiOWE5Njc0NGIxZjcyMDliOF8xMDE3NTU1MTE3Nzc2MzYzNzk").await.unwrap();
+    // println!("channel: {:#?}", channel);
+
+    let token = hop.channels.delete_token("leap_token_c19mMjA1Y2UwNDNiZmVlNGQ0ZDliYjYyODdiNTZkZWQ5ZV8xMDE3Njg4MTE0NTQyNDY5NDc").await.unwrap();
+
+    // let token = hop.channels.create_token().await.unwrap();
+    // println!("token: {:#?}", token);
 
     // Example: Creating a project secret
     // hop.projects.create_secret(

@@ -56,6 +56,16 @@ impl APIClient {
     ) -> Result<serde_json::Value, APIError> {
         let client = reqwest::Client::new();
 
+        let r = client
+            .put(format!("{}{}", BASE_URL, url).as_str())
+            .header("Authorization", self.token.as_str())
+            .header("Content-Type", "application/json")
+            .json(&data).build().unwrap();
+
+        // print r
+        // println!("{:?}", r.headers().to_owned());
+        println!("{:?}", r.body().unwrap().to_owned());
+
         println!("{}", format!("{}{}", BASE_URL, url).as_str());
         println!("{}", serde_json::to_string_pretty(&data).unwrap());
 

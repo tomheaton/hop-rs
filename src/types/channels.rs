@@ -28,3 +28,12 @@ pub struct Channel {
     #[serde(rename = "type")]
     pub channel_type: ChannelType,
 }
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct ChannelToken {
+    pub id: String,
+    pub created_at: String,
+    pub state: HashMap<String, String>,
+    pub expires_at: String,
+    pub is_online: bool,
+}

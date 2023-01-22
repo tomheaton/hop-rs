@@ -7,6 +7,7 @@ pub mod projects;
 pub mod registry;
 pub mod users;
 
+// TODO: implement error message
 #[derive(Debug)]
 pub struct APIError;
 
