@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use crate::client::APIClient;
 use crate::types::APIError;
-use crate::types::channels::{Channel, ChannelToken};
+use crate::types::channels::{Channel, ChannelToken, ChannelType};
 
 pub struct Channels {
     pub token: String,
@@ -52,9 +52,10 @@ impl Channels {
         return Ok(serde_json::from_value(channel).unwrap());
     }
 
-    // FIXME: ?
     pub async fn create_channel(
-        &self
+        &self,
+        channel_type: ChannelType,
+        state: Option<HashMap<String, String>>,
     ) -> Result<Channel, APIError> {
         println!("Creating a  channel");
 
@@ -62,7 +63,10 @@ impl Channels {
             self.token.as_str(),
         ).post(
             "/v1/channels",
-            serde_json::json!({}),
+            serde_json::json!({
+                "type": channel_type,
+                "state": state,
+            }),
         ).await.unwrap();
 
         let channel = response["data"]["channel"].clone();

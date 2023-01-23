@@ -49,7 +49,6 @@ impl APIClient {
         return Ok(data);
     }
 
-    // FIXME: ?
     pub async fn post<T: Serialize>(
         &self,
         url: &str,

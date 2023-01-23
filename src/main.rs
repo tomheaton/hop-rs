@@ -9,6 +9,7 @@ use dotenv::dotenv;
 use rand::Rng;
 
 use hop::{get_bytes, Hop, types::ignite::{DeploymentConfig, Image, Resources, RestartPolicy, RuntimeType}};
+use hop::types::channels::ChannelType;
 
 #[tokio::main]
 async fn main() {
@@ -29,7 +30,7 @@ async fn main() {
 
     // hop.channels.delete_token("leap_token_c19mMGY2ZjcxOGRmOTk1ODUxZjYyZThlNzRlYjUwZTMyOF8xMDE3NzQ4NDEzNTQxNDE3Mzc").await.unwrap();
 
-    let channel = hop.channels.create_channel().await.unwrap();
+    let channel = hop.channels.create_channel(ChannelType::Private, None).await.unwrap();
     println!("channel: {:#?}", channel);
 
     // let token = hop.channels.create_token().await.unwrap();
