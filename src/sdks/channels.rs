@@ -255,7 +255,9 @@ impl Channels {
         &self,
         // TODO: use raw serde_json here to allow any value?
         state: Option<HashMap<String, String>>,
+        // state: impl Into<Option<HashMap<String, String>>>,
     ) -> Result<ChannelToken, APIError> {
+        // let state = state.into();
         println!("Creating a channel token");
 
         // TODO: inline this? (intellisense not available inside the macro)
