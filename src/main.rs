@@ -39,9 +39,41 @@ async fn main() {
     println!("channel: {:#?}", channel);*/
 
     // let state = HashMap::from([
-    //     ("foo".to_string(), "bar".to_string()),
-    //     ("baz".to_string(), "qux".to_string()),
+    //     // ("foo".to_string(), "bar".to_string()),
+    //     // ("baz".to_string(), "qux".to_string()),
+    //     // ("tom".to_string(), "heaton".to_string()),
+    //     ("jeff".to_string(), "heaton".to_string()),
     // ]);
+    // let token = hop.channels.set_token_state(
+    //     "leap_token_c19kYzA3NTIxODExYzJmMDAzMjE5ZGI3OGExNTRmODNmMV8xMDIwNzU1NDIxNjI1NTkwMDk",
+    //     state,
+    // ).await.unwrap();
+    // println!("token: {:#?}", token);
+
+    /*let x = hop.channels.publish_direct_message(
+        "leap_token_c19kYzA3NTIxODExYzJmMDAzMjE5ZGI3OGExNTRmODNmMV8xMDIwNzU1NDIxNjI1NTkwMDk",
+        "tom",
+        HashMap::new(),
+    ).await.unwrap();*/
+
+    let tokens = Vec::from([
+        "leap_token_c19iZDBlMmFkZTI2OGMzNTQ0NjVkZWQzNDBkM2M1OTNkOF8xMDIwNzY0NzU5Mjg2NTc5NTA",
+        "leap_token_c19kYzA3NTIxODExYzJmMDAzMjE5ZGI3OGExNTRmODNmMV8xMDIwNzU1NDIxNjI1NTkwMDk",
+    ]);
+
+    hop.channels.subscribe_tokens("testing", tokens).await.unwrap();
+
+    // hop.channels.patch_state(
+    //     "channel_MTAyMDY2MjgzNDAwODM5MTkw",
+    //     state,
+    // ).await.unwrap();
+
+    /*let x = hop.channels.publish_message(
+        "channel_MTAyMDY2MjgzNDAwODM5MTkw",
+        "tom",
+        HashMap::new(),
+    ).await.unwrap();*/
+
     // let token = hop.channels.create_token(Some(state)).await.unwrap();
     // println!("token: {:#?}", token);
     // let on = hop.channels.is_token_online(token.id.as_str()).await.unwrap();

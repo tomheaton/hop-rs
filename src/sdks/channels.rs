@@ -67,7 +67,7 @@ impl Channels {
             Some(id) => {
                 response = APIClient::new(
                     self.token.as_str(),
-                ).put_json(
+                ).put(
                     format!("/v1/channels/{}", id).as_str(),
                     serde_json::json!({
                         "type": channel_type,
@@ -125,17 +125,37 @@ impl Channels {
     }
 
     pub async fn subscribe_tokens(
-        &self
-    ) -> () {
-        println!("Getting channel subscription tokens");
-        panic!("not implemented!");
+        &self,
+        channel_id: &str,
+        tokens: Vec<&str>,
+    ) -> Result<(), APIError> {
+        println!("Subscribing tokens to channel");
+
+        for token in tokens {
+            APIClient::new(
+                self.token.as_str(),
+            ).put_none(
+                format!("/v1/channels/{}/subscribers/{}", channel_id, token).as_str(),
+            ).await.unwrap();
+        }
+
+        return Ok(());
     }
 
     pub async fn subscribe_token(
-        &self
-    ) -> () {
-        println!("Getting channel subscription token");
-        panic!("not implemented!");
+        &self,
+        channel_id: &str,
+        token_id: &str,
+    ) -> Result<(), APIError> {
+        println!("Subscribing token to channel");
+
+        APIClient::new(
+            self.token.as_str(),
+        ).put_none(
+            format!("/v1/channels/{}/subscribers/{}", channel_id, token_id).as_str(),
+        ).await.unwrap();
+
+        return Ok(());
     }
 
     /*pub async fn get_tokens(
@@ -155,24 +175,58 @@ impl Channels {
     }*/
 
     pub async fn set_state(
-        &self
-    ) -> () {
+        &self,
+        channel_id: &str,
+        state: HashMap<String, String>,
+    ) -> Result<(), APIError> {
         println!("Setting channel state");
-        panic!("not implemented!");
+
+        APIClient::new(
+            self.token.as_str(),
+        ).put(
+            format!("/v1/channels/{}/state", channel_id).as_str(),
+            serde_json::json!(state),
+        ).await.unwrap();
+
+        return Ok(());
     }
 
     pub async fn patch_state(
-        &self
-    ) -> () {
+        &self,
+        channel_id: &str,
+        state: HashMap<String, String>,
+    ) -> Result<(), APIError> {
         println!("Patching channel state");
-        panic!("not implemented!");
+
+        APIClient::new(
+            self.token.as_str(),
+        ).patch(
+            format!("/v1/channels/{}/state", channel_id).as_str(),
+            serde_json::json!(state),
+        ).await.unwrap();
+
+        return Ok(());
     }
 
     pub async fn publish_message(
-        &self
-    ) -> () {
+        &self,
+        channel_id: &str,
+        event: &str,
+        data: HashMap<String, String>,
+    ) -> Result<(), APIError> {
         println!("Publishing a channel message");
-        panic!("not implemented!");
+
+        APIClient::new(
+            self.token.as_str(),
+        ).post(
+            format!("/v1/channels/{}/messages", channel_id).as_str(),
+            serde_json::json!({
+                "e": event,
+                "d": data,
+            }),
+        ).await.unwrap();
+
+        return Ok(());
     }
 
     // Tokens:
@@ -209,9 +263,7 @@ impl Channels {
             self.token.as_str(),
         ).post(
             "/v1/channels/tokens",
-            serde_json::json!({
-                "state": state,
-            }),
+            serde_json::json!(state),
         ).await.unwrap();
 
         println!("response: {:?}", response);
@@ -236,10 +288,25 @@ impl Channels {
     }
 
     pub async fn set_token_state(
-        &self
-    ) -> () {
+        &self,
+        token_id: &str,
+        state: HashMap<String, String>,
+    ) -> Result<ChannelToken, APIError> {
         println!("Setting a channel token's state");
-        panic!("not implemented!");
+
+        let response = APIClient::new(
+            self.token.as_str(),
+        ).patch(
+            format!("/v1/channels/tokens/{}", token_id).as_str(),
+            serde_json::json!(state),
+        ).await.unwrap();
+
+        println!("response: {:?}", response);
+
+        let mut token = response["data"]["token"].clone();
+        token["is_online"] = serde_json::json!(true);
+
+        return Ok(serde_json::from_value(token).unwrap());
     }
 
     pub async fn is_token_online(
@@ -262,9 +329,23 @@ impl Channels {
     }
 
     pub async fn publish_direct_message(
-        &self
-    ) -> () {
+        &self,
+        token_id: &str,
+        event: &str,
+        data: HashMap<String, String>,
+    ) -> Result<(), APIError> {
         println!("Publishing a direct message to a channel token");
-        panic!("not implemented!");
+
+        APIClient::new(
+            self.token.as_str(),
+        ).post(
+            format!("/v1/channels/tokens/{}/messages", token_id).as_str(),
+            serde_json::json!({
+                "e": event,
+                "d": data,
+            }),
+        ).await.unwrap();
+
+        return Ok(());
     }
 }

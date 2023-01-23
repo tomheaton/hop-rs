@@ -68,6 +68,12 @@ impl APIClient {
             .await
             .unwrap();
 
+        // TODO: handle returning empty response
+        if response.status() == 201 {
+            println!("POST Successful!");
+            return Ok(serde_json::json!({}));
+        }
+
         if response.status() != 200 {
             // println!("status: {}", response.status());
             println!("response: {}", response.text().await.unwrap());
@@ -80,8 +86,7 @@ impl APIClient {
         return Ok(data);
     }
 
-    // TODO: this is a hack, we should be able to use the same function for both
-    pub async fn put_json<T: Serialize>(
+    pub async fn put<T: Serialize>(
         &self,
         url: &str,
         data: T,
@@ -112,7 +117,38 @@ impl APIClient {
         return Ok(data);
     }
 
-    pub async fn put(
+    // TODO: merge this with put
+    pub async fn put_none(
+        &self,
+        url: &str,
+    ) -> Result<serde_json::Value, APIError> {
+        let client = reqwest::Client::new();
+
+        // println!("{}", format!("{}{}", BASE_URL, url).as_str());
+        // println!("{}", serde_json::to_string_pretty(&data).unwrap());
+
+        let response = client
+            .put(format!("{}{}", BASE_URL, url).as_str())
+            .header("Authorization", self.token.as_str())
+            .header("Content-Type", "application/json")
+            .send()
+            .await
+            .unwrap();
+
+        if response.status() != 200 {
+            // println!("status: {}", response.status());
+            println!("response: {}", response.text().await.unwrap());
+            return Err(APIError);
+        }
+
+        let data: serde_json::Value = response.json().await.unwrap();
+        println!("response: {}", serde_json::to_string_pretty(&data).unwrap());
+
+        return Ok(data);
+    }
+
+    // TODO: this is a hack, we should be able to use the same function for both
+    pub async fn put_raw(
         &self,
         url: &str,
         data: String,
@@ -140,15 +176,21 @@ impl APIClient {
         return Ok(data);
     }
 
-    pub async fn patch(
+    pub async fn patch<T: Serialize>(
         &self,
         url: &str,
+        data: T,
     ) -> Result<serde_json::Value, APIError> {
         let client = reqwest::Client::new();
+
+        // println!("{}", format!("{}{}", BASE_URL, url).as_str());
+        // println!("{}", serde_json::to_string_pretty(&data).unwrap());
 
         let response = client
             .patch(format!("{}{}", BASE_URL, url).as_str())
             .header("Authorization", self.token.as_str())
+            .header("Content-Type", "application/json")
+            .json(&data)
             .send()
             .await
             .unwrap();
@@ -164,6 +206,7 @@ impl APIClient {
 
         return Ok(data);
     }
+
 
     pub async fn delete(
         &self,
@@ -190,7 +233,7 @@ impl APIClient {
             return Err(APIError);
         }
 
-        println!("delete successful");
+        println!("DELETE Successful!");
 
         return Ok(());
     }

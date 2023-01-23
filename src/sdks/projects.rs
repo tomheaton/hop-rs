@@ -119,7 +119,7 @@ impl Projects {
 
         return APIClient::new(
             self.token.as_str(),
-        ).put(
+        ).put_raw(
             format!("/v1/projects/@this/secrets/{}", name).as_str(),
             value,
         ).await;
