@@ -34,6 +34,7 @@ pub struct ChannelToken {
     pub id: String,
     pub created_at: String,
     pub state: HashMap<String, String>,
-    pub expires_at: String,
+    pub expires_at: Option<String>,
     pub is_online: bool,
+    // pub is_online: Option<bool>,
 }

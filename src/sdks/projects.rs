@@ -29,7 +29,7 @@ impl Projects {
             "/v1/projects/@this/members"
         ).await.unwrap();
 
-        let members = response["data"]["members"].clone();
+        let members = response["data"]["members"].to_owned();
 
         return Ok(serde_json::from_value(members).unwrap());
     }
@@ -47,7 +47,7 @@ impl Projects {
             "/v1/projects/@this/members/@me"
         ).await.unwrap();
 
-        let member = response["data"]["member"].clone();
+        let member = response["data"]["member"].to_owned();
 
         return Ok(serde_json::from_value(member).unwrap());
     }

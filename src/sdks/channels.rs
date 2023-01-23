@@ -30,7 +30,7 @@ impl Channels {
             "/v1/channels"
         ).await.unwrap();
 
-        let channels = response["data"]["channels"].clone();
+        let channels = response["data"]["channels"].to_owned();
 
         return Ok(serde_json::from_value(channels).unwrap());
     }
@@ -47,7 +47,7 @@ impl Channels {
             format!("/v1/channels/{}", channel_id).as_str()
         ).await.unwrap();
 
-        let channel = response["data"]["channel"].clone();
+        let channel = response["data"]["channel"].to_owned();
 
         return Ok(serde_json::from_value(channel).unwrap());
     }
@@ -55,21 +55,40 @@ impl Channels {
     pub async fn create_channel(
         &self,
         channel_type: ChannelType,
+        channel_id: Option<&str>,
+        // TODO: use raw serde_json here to allow any value?
         state: Option<HashMap<String, String>>,
     ) -> Result<Channel, APIError> {
-        println!("Creating a  channel");
+        println!("Creating a channel");
 
-        let response = APIClient::new(
-            self.token.as_str(),
-        ).post(
-            "/v1/channels",
-            serde_json::json!({
-                "type": channel_type,
-                "state": state,
-            }),
-        ).await.unwrap();
+        let response;
 
-        let channel = response["data"]["channel"].clone();
+        match channel_id {
+            Some(id) => {
+                response = APIClient::new(
+                    self.token.as_str(),
+                ).put_json(
+                    format!("/v1/channels/{}", id).as_str(),
+                    serde_json::json!({
+                        "type": channel_type,
+                        "state": state,
+                    }),
+                ).await.unwrap();
+            }
+            None => {
+                response = APIClient::new(
+                    self.token.as_str(),
+                ).post(
+                    "/v1/channels",
+                    serde_json::json!({
+                        "type": channel_type,
+                        "state": state,
+                    }),
+                ).await.unwrap();
+            }
+        }
+
+        let channel = response["data"]["channel"].to_owned();
 
         return Ok(serde_json::from_value(channel).unwrap());
     }
@@ -100,7 +119,7 @@ impl Channels {
             format!("/v1/channels/{}/stats", channel_id).as_str()
         ).await.unwrap();
 
-        let stats = response["data"]["stats"].clone();
+        let stats = response["data"]["stats"].to_owned();
 
         return Ok(serde_json::from_value(stats).unwrap());
     }
@@ -130,7 +149,7 @@ impl Channels {
             format!("/v1/channels/{}/tokens", channel_id).as_str()
         ).await.unwrap();
 
-        let tokens = response["data"]["tokens"].clone();
+        let tokens = response["data"]["tokens"].to_owned();
 
         return Ok(serde_json::from_value(tokens).unwrap());
     }*/
@@ -170,7 +189,7 @@ impl Channels {
             format!("/v1/channels/tokens/{}", token_id).as_str()
         ).await.unwrap();
 
-        let token = response["data"]["token"].clone();
+        let token = response["data"]["token"].to_owned();
 
         return Ok(serde_json::from_value(token).unwrap());
     }
@@ -179,24 +198,26 @@ impl Channels {
     pub async fn create_token(
         &self,
         // TODO: use raw serde_json here to allow any value?
-        // state: HashMap<String, String>,
+        state: Option<HashMap<String, String>>,
     ) -> Result<ChannelToken, APIError> {
         println!("Creating a channel token");
+
+        // TODO: inline this? (intellisense not available inside the macro)
+        let state = state.unwrap_or(HashMap::new());
 
         let response = APIClient::new(
             self.token.as_str(),
         ).post(
             "/v1/channels/tokens",
             serde_json::json!({
-                // FIXME: this does not work
-                "type": "lol",
-                "state": {
-                    "test": "123",
-                }
+                "state": state,
             }),
         ).await.unwrap();
 
-        let token = response["data"]["token"].clone();
+        println!("response: {:?}", response);
+
+        let mut token = response["data"]["token"].clone();
+        token["is_online"] = serde_json::json!(true);
 
         return Ok(serde_json::from_value(token).unwrap());
     }
@@ -233,10 +254,11 @@ impl Channels {
             format!("/v1/channels/tokens/{}", token_id).as_str()
         ).await.unwrap();
 
-        let token = response["data"]["token"].clone();
+        let token = response["data"]["token"].to_owned();
         let token = serde_json::from_value::<ChannelToken>(token).unwrap();
 
         return Ok(token.is_online);
+        // return Ok(token.is_online.unwrap());
     }
 
     pub async fn publish_direct_message(

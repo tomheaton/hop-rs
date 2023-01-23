@@ -30,8 +30,24 @@ async fn main() {
 
     // hop.channels.delete_token("leap_token_c19mMGY2ZjcxOGRmOTk1ODUxZjYyZThlNzRlYjUwZTMyOF8xMDE3NzQ4NDEzNTQxNDE3Mzc").await.unwrap();
 
-    let channel = hop.channels.create_channel(ChannelType::Private, None).await.unwrap();
-    println!("channel: {:#?}", channel);
+    /*let channel = hop.channels.create_channel(
+        ChannelType::Private,
+        Some("tom2"),
+        // None,
+        None,
+    ).await.unwrap();
+    println!("channel: {:#?}", channel);*/
+
+    // let state = HashMap::from([
+    //     ("foo".to_string(), "bar".to_string()),
+    //     ("baz".to_string(), "qux".to_string()),
+    // ]);
+    // let token = hop.channels.create_token(Some(state)).await.unwrap();
+    // println!("token: {:#?}", token);
+    // let on = hop.channels.is_token_online(token.id.as_str()).await.unwrap();
+    // println!("on: {:#?}", on);
+
+    // hop.channels.delete_channel("tom").await.unwrap();
 
     // let token = hop.channels.create_token().await.unwrap();
     // println!("token: {:#?}", token);

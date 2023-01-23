@@ -13,6 +13,7 @@ pub fn get_bytes(ram: &str) -> i64 {
         // TODO: implement bytes (maybe check for "B" after checking hashmap?)
         // ("B", 1),
         ("KB", 1024),
+        // TODO: is this broken?
         ("MB", 1024 * 1024),
         ("GB", 1024 * 1024 * 1024),
     ]);

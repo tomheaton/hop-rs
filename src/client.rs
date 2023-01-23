@@ -4,7 +4,7 @@ use crate::types::APIError;
 
 pub const BASE_URL: &str = "https://api.hop.io";
 
-// TODO: do we like this?
+// TODO: use this?
 pub struct APIClientTest<'a> {
     pub token: &'a str,
 }
@@ -56,11 +56,43 @@ impl APIClient {
     ) -> Result<serde_json::Value, APIError> {
         let client = reqwest::Client::new();
 
-        println!("{}", format!("{}{}", BASE_URL, url).as_str());
-        println!("{}", serde_json::to_string_pretty(&data).unwrap());
+        // println!("{}", format!("{}{}", BASE_URL, url).as_str());
+        // println!("{}", serde_json::to_string_pretty(&data).unwrap());
 
         let response = client
             .post(format!("{}{}", BASE_URL, url).as_str())
+            .header("Authorization", self.token.as_str())
+            .header("Content-Type", "application/json")
+            .json(&data)
+            .send()
+            .await
+            .unwrap();
+
+        if response.status() != 200 {
+            // println!("status: {}", response.status());
+            println!("response: {}", response.text().await.unwrap());
+            return Err(APIError);
+        }
+
+        let data: serde_json::Value = response.json().await.unwrap();
+        println!("response: {}", serde_json::to_string_pretty(&data).unwrap());
+
+        return Ok(data);
+    }
+
+    // TODO: this is a hack, we should be able to use the same function for both
+    pub async fn put_json<T: Serialize>(
+        &self,
+        url: &str,
+        data: T,
+    ) -> Result<serde_json::Value, APIError> {
+        let client = reqwest::Client::new();
+
+        // println!("{}", format!("{}{}", BASE_URL, url).as_str());
+        // println!("{}", serde_json::to_string_pretty(&data).unwrap());
+
+        let response = client
+            .put(format!("{}{}", BASE_URL, url).as_str())
             .header("Authorization", self.token.as_str())
             .header("Content-Type", "application/json")
             .json(&data)
