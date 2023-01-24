@@ -11,6 +11,7 @@ use rand::Rng;
 use hop::{get_bytes, Hop};
 use hop::types::channels::ChannelType;
 use hop::types::ignite::{DeploymentConfig, Image, Resources, RestartPolicy, RuntimeType};
+use hop::types::pipe::{DeliveryProtocol, HLSConfig, IngestProtocol, RoomOptions};
 
 #[tokio::main]
 async fn main() {
@@ -28,6 +29,24 @@ async fn main() {
         "leap_token_c19kYzA3NTIxODExYzJmMDAzMjE5ZGI3OGExNTRmODNmMV8xMDIwNzU1NDIxNjI1NTkwMDk",
     ]);
 
+    // let rooms = hop.pipe.get_rooms().await.unwrap();
+    // println!("rooms: {:#?}", rooms);
+
+    /*let room = hop.pipe.create(
+        "hop-room",
+        RoomOptions {
+            delivery_protocols: vec![DeliveryProtocol::WebRTC],
+            ephemeral: false,
+            ingest_protocol: IngestProtocol::RTMP,
+            hls_config: Some(HLSConfig {
+                wcl_delay: 0,
+                artificial_id: 0,
+                max_playout_bitrate_preset: "".to_string(),
+            }),
+        },
+    ).await.unwrap();
+    println!("room: {:#?}", room);*/
+
     // TODO: check me
     // hop.channels.subscribe_token("test-channel", tokens[0]).await.unwrap();
     // hop.channels.subscribe_tokens("testing", tokens).await.unwrap();
@@ -43,12 +62,12 @@ async fn main() {
         HashMap::new(),
     ).await.unwrap();*/
 
-    let state = HashMap::from([
-        // ("foo".to_string(), "bar".to_string()),
-        // ("baz".to_string(), "qux".to_string()),
-        // ("tom".to_string(), "heaton".to_string()),
-        ("jeff".to_string(), "heaton".to_string()),
-    ]);
+    // let state = HashMap::from([
+    //     // ("foo".to_string(), "bar".to_string()),
+    //     // ("baz".to_string(), "qux".to_string()),
+    //     // ("tom".to_string(), "heaton".to_string()),
+    //     ("jeff".to_string(), "heaton".to_string()),
+    // ]);
 
     // let token = hop.channels.create_token(Some(state)).await.unwrap();
     // let token = hop.channels.create_token(state).await.unwrap();

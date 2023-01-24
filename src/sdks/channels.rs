@@ -248,7 +248,6 @@ impl Channels {
         return Ok(serde_json::from_value(token).unwrap());
     }
 
-
     pub async fn create_token(
         &self,
         // TODO: use raw serde_json here to allow any value?

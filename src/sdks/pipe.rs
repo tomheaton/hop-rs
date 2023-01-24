@@ -1,3 +1,6 @@
+use crate::{APIClient, APIError};
+use crate::types::pipe::{DeliveryProtocol, IngestProtocol, Region, Room, RoomOptions, RoomState};
+
 pub struct Pipe {
     pub token: String,
 }
@@ -15,13 +18,21 @@ impl Pipe {
 
     pub async fn get_rooms(
         &self
-    ) -> () {
+    ) -> Result<Vec<Room>, APIError> {
         println!("Getting all rooms");
-        panic!("not implemented!");
+
+        let response = APIClient::new(
+            self.token.as_str(),
+        ).get(
+            "/v1/pipe/rooms"
+        ).await.unwrap();
+
+        let rooms = response["data"]["rooms"].to_owned();
+
+        return Ok(serde_json::from_value(rooms).unwrap());
     }
 
     // TODO: check this
-
     /*pub async fn get_room(
         &self
     ) -> () {
@@ -30,16 +41,53 @@ impl Pipe {
     }*/
 
     pub async fn create(
-        &self
-    ) -> () {
+        &self,
+        name: &str,
+        options: RoomOptions,
+    ) -> Result<Room, APIError> {
         println!("Creating a room");
-        panic!("not implemented!");
+
+        let mut config = serde_json::json!({
+                "name": name,
+
+                "ingest_protocol": options.ingest_protocol,
+                "region": Region::USEast1,
+
+                "ephemeral": options.ephemeral,
+
+                "delivery_protocols": options.delivery_protocols,
+                // "llhls_config": options.hls_config,
+            });
+
+        if !options.hls_config.is_none() {
+            config["llhls_config"] = serde_json::json!(options.hls_config.unwrap());
+        }
+
+        let response = APIClient::new(
+            self.token.as_str(),
+        ).post(
+            "/v1/pipe/rooms",
+            config,
+        ).await.unwrap();
+
+        println!("response: {:?}", response);
+
+        let mut room = response["data"]["room"].clone();
+        room["state"] = serde_json::json!(RoomState::OFFLINE);
+
+        return Ok(serde_json::from_value(room).unwrap());
     }
 
     pub async fn delete(
-        &self
-    ) -> () {
+        &self,
+        room_id: &str,
+    ) -> Result<(), APIError> {
         println!("Deleting a room");
-        panic!("not implemented!");
+
+        return APIClient::new(
+            self.token.as_str(),
+        ).delete(
+            format!("/v1/pipe/rooms/{}", room_id).as_str()
+        ).await;
     }
 }
