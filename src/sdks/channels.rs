@@ -124,7 +124,6 @@ impl Channels {
         return Ok(serde_json::from_value(stats).unwrap());
     }
 
-    // FIXME: this is not working
     pub async fn subscribe_tokens(
         &self,
         channel_id: &str,
@@ -143,7 +142,6 @@ impl Channels {
         return Ok(());
     }
 
-    // FIXME: this is not working
     pub async fn subscribe_token(
         &self,
         channel_id: &str,

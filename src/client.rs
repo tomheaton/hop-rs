@@ -121,30 +121,27 @@ impl APIClient {
     pub async fn put_none(
         &self,
         url: &str,
-    ) -> Result<serde_json::Value, APIError> {
+    ) -> Result<(), APIError> {
         let client = reqwest::Client::new();
 
-        // println!("{}", format!("{}{}", BASE_URL, url).as_str());
+        println!("{}", format!("{}{}", BASE_URL, url).as_str());
         // println!("{}", serde_json::to_string_pretty(&data).unwrap());
 
         let response = client
             .put(format!("{}{}", BASE_URL, url).as_str())
             .header("Authorization", self.token.as_str())
-            .header("Content-Type", "application/json")
             .send()
             .await
             .unwrap();
 
-        if response.status() != 200 {
+        if response.status() != 201 {
             // println!("status: {}", response.status());
             println!("response: {}", response.text().await.unwrap());
             return Err(APIError);
         }
 
-        let data: serde_json::Value = response.json().await.unwrap();
-        println!("response: {}", serde_json::to_string_pretty(&data).unwrap());
-
-        return Ok(data);
+        println!("PUT Successful!");
+        return Ok(());
     }
 
     // TODO: this is a hack, we should be able to use the same function for both

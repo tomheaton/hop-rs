@@ -23,12 +23,13 @@ async fn main() {
     let hop = Hop::new(my_token.as_str());
 
     let tokens = Vec::from([
+        "leap_token_c18yZmZmMzVmZjczYTQ4Yjc2MTlkZTAwYWYwN2M0NGZmNF8xMDIxMjQ5NzAxOTM4OTk1NjI",
         "leap_token_c19iZDBlMmFkZTI2OGMzNTQ0NjVkZWQzNDBkM2M1OTNkOF8xMDIwNzY0NzU5Mjg2NTc5NTA",
         "leap_token_c19kYzA3NTIxODExYzJmMDAzMjE5ZGI3OGExNTRmODNmMV8xMDIwNzU1NDIxNjI1NTkwMDk",
     ]);
 
     // TODO: check me
-    // hop.channels.subscribe_token("testing", tokens[0]).await.unwrap();
+    // hop.channels.subscribe_token("test-channel", tokens[0]).await.unwrap();
     // hop.channels.subscribe_tokens("testing", tokens).await.unwrap();
 
     // hop.channels.patch_state(
@@ -49,9 +50,9 @@ async fn main() {
         ("jeff".to_string(), "heaton".to_string()),
     ]);
 
-    let token = hop.channels.create_token(Some(state)).await.unwrap();
+    // let token = hop.channels.create_token(Some(state)).await.unwrap();
     // let token = hop.channels.create_token(state).await.unwrap();
-    let token = hop.channels.create_token(None).await.unwrap();
+    // let token = hop.channels.create_token(None).await.unwrap();
 
     // Example: Creating a deployment
     /*hop.ignite.create_deployment(
