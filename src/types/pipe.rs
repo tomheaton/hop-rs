@@ -21,13 +21,12 @@ pub enum Region {
     USEast1,
 }
 
-// TODO: rename enums to PascalCase
-#[derive(Debug, Serialize, Deserialize)]
+// #[derive(Debug, Serialize, Deserialize)]
 pub enum RoomState {
     #[serde(rename = "live")]
-    LIVE,
+    Live,
     #[serde(rename = "offline")]
-    OFFLINE,
+    Offline,
 }
 
 #[derive(Debug, Serialize, Deserialize)]

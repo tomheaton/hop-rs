@@ -121,6 +121,115 @@ impl Image {
     }
 }
 
+// #[derive(Debug, Serialize, Deserialize)]
+pub enum GatewayType {
+    #[serde(rename = "internal")]
+    Internal,
+    #[serde(rename = "external")]
+    External,
+}
+
+// #[derive(Debug, Serialize, Deserialize)]
+pub enum DomainState {
+    #[serde(rename = "pending")]
+    Pending,
+    #[serde(rename = "valid_cname")]
+    ValidCName,
+    #[serde(rename = "ssl_active")]
+    SSLActive,
+}
+
+// #[derive(Debug, Serialize, Deserialize)]
+pub struct Domain {
+    pub id: String,
+    pub domain: String,
+    pub state: DomainState,
+    pub created_at: String,
+    pub redirect: String,
+}
+
+// #[derive(Debug, Serialize, Deserialize)]
+pub enum GatewayProtocol {
+    #[serde(rename = "http")]
+    HTTP,
+}
+
+// #[derive(Debug, Serialize, Deserialize)]
+pub struct Gateway {
+    pub id: String,
+    pub gateway_type: GatewayType,
+    pub name: String,
+    pub protocol: Option<GatewayProtocol>,
+    pub deployment_id: String,
+    pub created_at: String,
+    pub hopsh_domain: Option<String>,
+    pub hopsh_domain_enabled: bool,
+    pub internal_domain: Option<String>,
+    pub target_port: Option<i64>,
+    pub domains: Vec<Domain>,
+}
+
+impl Gateway {
+    pub fn add_domain(&self) {
+        println!("Adding gateway domain");
+        panic!("not implemented!")
+    }
+
+    pub fn delete_domain(&self) {
+        println!("Deleting gateway domain");
+        panic!("not implemented!")
+    }
+}
+
+// #[derive(Debug, Serialize, Deserialize)]
+pub struct BuildSettings {
+    pub root_directory: Option<String>,
+}
+
+// #[derive(Debug, Serialize, Deserialize)]
+pub struct DeploymentMetaData {
+    pub root_directory: Option<String>,
+}
+
+// #[derive(Debug, Serialize, Deserialize)]
+pub struct Deployment {
+    pub id: String,
+    pub name: String,
+    pub container_count: i64,
+    pub created_at: String,
+    pub metadata: Option<String>,
+    pub build_cache_enabled: bool,
+    pub build_settings: BuildSettings,
+}
+
+impl Deployment {
+    pub fn get_containers(&self) {
+        println!("Getting deployment containers");
+        panic!("not implemented!")
+    }
+
+    pub fn create_container(&self) {
+        println!("Creating deployment container");
+        panic!("not implemented!")
+    }
+
+    pub fn create_gateway(&self) {
+        println!("Creating deployment gateway");
+        panic!("not implemented!")
+    }
+
+    pub fn get_storage_stats(&self) {
+        println!("Getting deployment storage stats");
+        panic!("not implemented!")
+    }
+
+    pub fn delete(&self) {
+        println!("Deleting deployment");
+        panic!("not implemented!")
+    }
+}
+
+
 // #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize, CreateConstructor)]
 #[derive(Debug)]
 pub struct DeploymentConfig {

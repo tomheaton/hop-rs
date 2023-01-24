@@ -73,7 +73,7 @@ impl Pipe {
         println!("response: {:?}", response);
 
         let mut room = response["data"]["room"].clone();
-        room["state"] = serde_json::json!(RoomState::OFFLINE);
+        room["state"] = serde_json::json!(RoomState::Offline);
 
         return Ok(serde_json::from_value(room).unwrap());
     }
