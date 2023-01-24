@@ -35,3 +35,7 @@ async fn main() {
 
 [//]: # (// let projects = hop.projects&#40;&#41;.list&#40;&#41;.unwrap&#40;&#41;;)
 [//]: # (// println!&#40;"{:?}", projects&#41;;)
+
+## Examples
+
+Examples can be found [here](./examples).
