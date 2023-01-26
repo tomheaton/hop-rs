@@ -21,34 +21,38 @@ async fn main() {
     // let my_token = env::var("PERSONAL_TOKEN").expect("PERSONAL_TOKEN needed!");
     let hop = Hop::new(my_token.as_str());
 
+    // Example: Getting container logs
+    let logs = hop.ignite.get_container_logs("container_MTAzMjIwMjE4Mzk0ODI5MDgy").await.unwrap();
+    println!("logs: {:#?}", logs);
+
     // Example: Creating a deployment
-    hop.ignite.create_deployment(
-        DeploymentConfig::new(
-            "postgres",
-            RuntimeType::Ephemeral,
-            None,
-            Image::new(
-                Some("postgres"),
-                None,
-                None,
-            ),
-            Some(HashMap::from([
-                ("POSTGRES_PASSWORD", "password")
-            ])),
-            Resources::new(
-                1,
-                "1GB",
-                vec![],
-                /*vec![
-                    Vgpu::new(
-                        VgpuType::A400,
-                        1,
-                    )
-                ],*/
-            ),
-            RestartPolicy::Never,
-            None,
-            None,
-        ),
-    ).await;//.unwrap();
+    // hop.ignite.create_deployment(
+    //     DeploymentConfig::new(
+    //         "postgres",
+    //         RuntimeType::Ephemeral,
+    //         None,
+    //         Image::new(
+    //             Some("postgres"),
+    //             None,
+    //             None,
+    //         ),
+    //         Some(HashMap::from([
+    //             ("POSTGRES_PASSWORD", "password")
+    //         ])),
+    //         Resources::new(
+    //             1,
+    //             "1GB",
+    //             vec![],
+    //             /*vec![
+    //                 Vgpu::new(
+    //                     VgpuType::A400,
+    //                     1,
+    //                 )
+    //             ],*/
+    //         ),
+    //         RestartPolicy::Never,
+    //         None,
+    //         None,
+    //     ),
+    // ).await;//.unwrap();
 }

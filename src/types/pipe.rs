@@ -21,7 +21,7 @@ pub enum Region {
     USEast1,
 }
 
-// #[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub enum RoomState {
     #[serde(rename = "live")]
     Live,

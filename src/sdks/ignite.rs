@@ -1,4 +1,5 @@
-use crate::types::ignite::DeploymentConfig;
+use crate::{APIClient, APIError};
+use crate::types::ignite::{ContainerState, DeploymentConfig, DeploymentLog};
 
 pub struct Ignite {
     pub token: String,
@@ -16,14 +17,14 @@ impl Ignite {
     // Deployments:
 
     pub async fn get_deployments(
-        &self
+        &self,
     ) -> () {
         println!("Getting all ignite deployments");
         panic!("not implemented!");
     }
 
     pub async fn get_deployment(
-        &self
+        &self,
     ) -> () {
         println!("Getting an ignite deployment");
         panic!("not implemented!");
@@ -152,22 +153,57 @@ impl Ignite {
 
     pub async fn start_container(
         &self,
-    ) -> () {
+        container_id: &str,
+    ) -> Result<(), APIError> {
         println!("Starting an ignite container");
-        panic!("not implemented!");
+
+        APIClient::new(
+            self.token.as_str(),
+        ).put(
+            format!("/v1/ignite/containers/{}/state", container_id).as_str(),
+            serde_json::json!({
+                "preferred_state": ContainerState::Running,
+            }),
+        ).await.unwrap();
+
+        return Ok(());
     }
 
     pub async fn stop_container(
         &self,
-    ) -> () {
+        container_id: &str,
+    ) -> Result<(), APIError> {
         println!("Stopping an ignite container");
-        panic!("not implemented!");
+
+        APIClient::new(
+            self.token.as_str(),
+        ).put(
+            format!("/v1/ignite/containers/{}/state", container_id).as_str(),
+            serde_json::json!({
+                "preferred_state": ContainerState::Stopped
+            }),
+        ).await.unwrap();
+
+        return Ok(());
     }
 
     pub async fn get_container_logs(
         &self,
-    ) -> () {
+        container_id: &str,
+        // TODO: add options
+        // options: ()
+    ) -> Result<Vec<DeploymentLog>, APIError> {
         println!("Getting an ignite container's logs");
-        panic!("not implemented!");
+
+        let response = APIClient::new(
+            self.token.as_str(),
+        ).get(
+            // TODO: add options as query params
+            format!("/v1/ignite/containers/{}/logs?offset=0", container_id).as_str(),
+        ).await.unwrap();
+
+        let logs = response["data"]["logs"].to_owned();
+
+        return Ok(serde_json::from_value(logs).unwrap());
     }
 }

@@ -36,7 +36,8 @@ impl Projects {
 
     pub async fn get_current_member(
         &self,
-        project_id: &str,
+        // TODO: add this
+        // project_id: &str,
     ) -> Result<Member, APIError> {
         println!("Getting current project member");
 

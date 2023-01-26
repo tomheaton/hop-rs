@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Resources {
     pub vcpu: i64,
     pub ram: String,
@@ -31,7 +31,7 @@ pub enum VgpuType {
     A400,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Vgpu {
     pub vgpu_type: VgpuType,
     pub count: i64,
@@ -47,6 +47,22 @@ impl Vgpu {
             count,
         };
     }
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub enum ContainerState {
+    #[serde(rename = "pending")]
+    Pending,
+    #[serde(rename = "running")]
+    Running,
+    #[serde(rename = "stopped")]
+    Stopped,
+    #[serde(rename = "failed")]
+    Failed,
+    #[serde(rename = "terminating")]
+    Terminating,
+    #[serde(rename = "exited")]
+    Exited,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -121,7 +137,15 @@ impl Image {
     }
 }
 
-// #[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
+pub struct DeploymentLog {
+    pub nonce: String,
+    pub timestamp: String,
+    pub level: String,
+    pub message: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub enum GatewayType {
     #[serde(rename = "internal")]
     Internal,
@@ -129,7 +153,7 @@ pub enum GatewayType {
     External,
 }
 
-// #[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub enum DomainState {
     #[serde(rename = "pending")]
     Pending,
@@ -139,7 +163,7 @@ pub enum DomainState {
     SSLActive,
 }
 
-// #[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Domain {
     pub id: String,
     pub domain: String,
@@ -148,13 +172,13 @@ pub struct Domain {
     pub redirect: String,
 }
 
-// #[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub enum GatewayProtocol {
     #[serde(rename = "http")]
     HTTP,
 }
 
-// #[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Gateway {
     pub id: String,
     pub gateway_type: GatewayType,
@@ -181,17 +205,17 @@ impl Gateway {
     }
 }
 
-// #[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct BuildSettings {
     pub root_directory: Option<String>,
 }
 
-// #[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct DeploymentMetaData {
     pub root_directory: Option<String>,
 }
 
-// #[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Deployment {
     pub id: String,
     pub name: String,
@@ -229,9 +253,7 @@ impl Deployment {
     }
 }
 
-
-// #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize, CreateConstructor)]
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct DeploymentConfig {
     name: String,
     container_strategy: ContainerStrategy,
