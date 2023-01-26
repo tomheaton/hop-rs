@@ -8,10 +8,8 @@ use std::env;
 use dotenv::dotenv;
 use rand::Rng;
 
-use hop::{get_bytes, Hop};
-use hop::types::channels::ChannelType;
+use hop::Hop;
 use hop::types::ignite::{DeploymentConfig, Image, Resources, RestartPolicy, RuntimeType};
-use hop::types::pipe::{DeliveryProtocol, HLSConfig, IngestProtocol, RoomOptions};
 
 #[tokio::main]
 async fn main() {
@@ -23,58 +21,8 @@ async fn main() {
     // let my_token = env::var("PERSONAL_TOKEN").expect("PERSONAL_TOKEN needed!");
     let hop = Hop::new(my_token.as_str());
 
-    let tokens = Vec::from([
-        "leap_token_c18yZmZmMzVmZjczYTQ4Yjc2MTlkZTAwYWYwN2M0NGZmNF8xMDIxMjQ5NzAxOTM4OTk1NjI",
-        "leap_token_c19iZDBlMmFkZTI2OGMzNTQ0NjVkZWQzNDBkM2M1OTNkOF8xMDIwNzY0NzU5Mjg2NTc5NTA",
-        "leap_token_c19kYzA3NTIxODExYzJmMDAzMjE5ZGI3OGExNTRmODNmMV8xMDIwNzU1NDIxNjI1NTkwMDk",
-    ]);
-
-    // let rooms = hop.pipe.get_rooms().await.unwrap();
-    // println!("rooms: {:#?}", rooms);
-
-    /*let room = hop.pipe.create(
-        "hop-room",
-        RoomOptions {
-            delivery_protocols: vec![DeliveryProtocol::WebRTC],
-            ephemeral: false,
-            ingest_protocol: IngestProtocol::RTMP,
-            hls_config: Some(HLSConfig {
-                wcl_delay: 0,
-                artificial_id: 0,
-                max_playout_bitrate_preset: "".to_string(),
-            }),
-        },
-    ).await.unwrap();
-    println!("room: {:#?}", room);*/
-
-    // TODO: check me
-    // hop.channels.subscribe_token("test-channel", tokens[0]).await.unwrap();
-    // hop.channels.subscribe_tokens("testing", tokens).await.unwrap();
-
-    // hop.channels.patch_state(
-    //     "channel_MTAyMDY2MjgzNDAwODM5MTkw",
-    //     state,
-    // ).await.unwrap();
-
-    /*let x = hop.channels.publish_message(
-        "channel_MTAyMDY2MjgzNDAwODM5MTkw",
-        "tom",
-        HashMap::new(),
-    ).await.unwrap();*/
-
-    // let state = HashMap::from([
-    //     // ("foo".to_string(), "bar".to_string()),
-    //     // ("baz".to_string(), "qux".to_string()),
-    //     // ("tom".to_string(), "heaton".to_string()),
-    //     ("jeff".to_string(), "heaton".to_string()),
-    // ]);
-
-    // let token = hop.channels.create_token(Some(state)).await.unwrap();
-    // let token = hop.channels.create_token(state).await.unwrap();
-    // let token = hop.channels.create_token(None).await.unwrap();
-
     // Example: Creating a deployment
-    /*hop.ignite.create_deployment(
+    hop.ignite.create_deployment(
         DeploymentConfig::new(
             "postgres",
             RuntimeType::Ephemeral,
@@ -84,11 +32,6 @@ async fn main() {
                 None,
                 None,
             ),
-            /*Image {
-                name: Some("postgres".to_owned()),
-                auth: None,
-                gh_repo: None,
-            },*/
             Some(HashMap::from([
                 ("POSTGRES_PASSWORD", "password")
             ])),
@@ -107,5 +50,5 @@ async fn main() {
             None,
             None,
         ),
-    ).await;//.unwrap();*/
+    ).await;//.unwrap();
 }

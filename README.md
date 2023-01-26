@@ -1,4 +1,4 @@
-# hop-rs
+# hop-rs (wip)
 
 hop sdk rust
 
