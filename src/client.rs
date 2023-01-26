@@ -204,7 +204,6 @@ impl APIClient {
         return Ok(data);
     }
 
-
     pub async fn delete(
         &self,
         url: &str,
@@ -233,5 +232,39 @@ impl APIClient {
         println!("DELETE Successful!");
 
         return Ok(());
+    }
+
+    // TODO: merge this with delete
+    pub async fn delete_with_return(
+        &self,
+        url: &str,
+    ) -> Result<serde_json::Value, APIError> {
+        let client = reqwest::Client::new();
+
+        let response = client
+            .delete(format!("{}{}", BASE_URL, url).as_str())
+            .header("Authorization", self.token.as_str())
+            .send()
+            .await
+            .unwrap();
+
+        // TODO: check other functions for correct status code
+        if response.status() != 200 {
+            // println!("status: {}", response.status());
+            println!("response: {}", response.text().await.unwrap());
+
+            // TODO: parse json response here, because no data returned from 204 DELETE
+            // let data: serde_json::Value = response.json().await.unwrap();
+            // println!("response: {}", serde_json::to_string_pretty(&data).unwrap());
+
+            return Err(APIError);
+        }
+
+        println!("DELETE Successful!");
+
+        let data: serde_json::Value = response.json().await.unwrap();
+        println!("response: {}", serde_json::to_string_pretty(&data).unwrap());
+
+        return Ok(data);
     }
 }

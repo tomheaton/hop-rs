@@ -1,5 +1,5 @@
 use crate::{APIClient, APIError};
-use crate::types::ignite::{ContainerState, DeploymentConfig, DeploymentLog};
+use crate::types::ignite::{Container, ContainerState, DeploymentConfig, DeploymentLog, HealthCheck, HealthCheckConfig};
 
 pub struct Ignite {
     pub token: String,
@@ -121,16 +121,41 @@ impl Ignite {
 
     // Health Checks:
 
+    // TODO: fix protocol not working
     pub async fn create_healthcheck(
         &self,
-    ) -> () {
+        deployment_id: &str,
+        config: HealthCheckConfig,
+    ) -> Result<HealthCheck, APIError> {
         println!("Creating a healthcheck");
-        panic!("not implemented!");
+
+        println!("Deployment ID: {}", deployment_id);
+        println!("Config: {:#?}", config);
+
+        let x = serde_json::json!({
+                "config": config,
+            });
+        println!("x: {:#?}", x);
+
+        let response = APIClient::new(
+            self.token.as_str(),
+        ).post(
+            format!("/v1/ignite/deployments/{}/health-check", deployment_id).as_str(),
+            serde_json::json!({
+                "config": config,
+            }),
+        ).await.unwrap();
+
+        let healthcheck = response["data"]["healthcheck"].to_owned();
+
+        return Ok(serde_json::from_value(healthcheck).unwrap());
     }
 
     pub async fn update_healthcheck(
         &self,
-    ) -> () {
+        deployment_id: &str,
+        config: HealthCheckConfig,
+    ) -> Result<(), APIError> {
         println!("Updating a healthcheck");
         panic!("not implemented!");
     }
@@ -146,9 +171,35 @@ impl Ignite {
 
     pub async fn delete_container(
         &self,
-    ) -> () {
+        container_id: &str,
+        // TODO: add options
+        recreate: bool,
+        // TODO: should it return this?
+    ) -> Result<Option<Container>, APIError> {
         println!("Deleting an ignite deployment");
-        panic!("not implemented!");
+
+        if !recreate {
+            APIClient::new(
+                self.token.as_str(),
+            ).delete(
+                format!("/v1/ignite/containers/{}", container_id).as_str(),
+            ).await.unwrap();
+
+            return Ok(None);
+        }
+
+        let response = APIClient::new(
+            self.token.as_str(),
+        ).delete_with_return(
+            format!("/v1/ignite/containers/{}?recreate=true", container_id).as_str(),
+            // TODO: add recreate option to query params
+            // format!("/v1/ignite/containers/{}", container_id).as_str(),
+        ).await.unwrap();
+
+        let container = response["data"]["container"].to_owned();
+        println!("container: {:?}", container);
+
+        return Ok(Some(serde_json::from_value(container).unwrap()));
     }
 
     pub async fn start_container(

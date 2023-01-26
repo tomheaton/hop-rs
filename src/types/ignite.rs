@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 
 use serde::{Deserialize, Serialize};
+use crate::types::pipe::Region;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Resources {
@@ -33,6 +34,7 @@ pub enum VgpuType {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Vgpu {
+    #[serde(rename = "type")]
     pub vgpu_type: VgpuType,
     pub count: i64,
 }
@@ -257,6 +259,7 @@ impl Deployment {
 pub struct DeploymentConfig {
     name: String,
     container_strategy: ContainerStrategy,
+    #[serde(rename = "type")]
     runtime_type: RuntimeType,
     version: String,
     cmd: Option<Vec<String>>,
@@ -299,6 +302,48 @@ impl DeploymentConfig {
             entrypoint: entrypoint.map(|e| e.into_iter().map(|e| e.to_owned()).collect()),
         };
     }
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Container {
+    pub id: String,
+    pub created_at: String,
+    pub region: Region,
+    pub state: ContainerState,
+    pub deployment_id: String,
+    pub internal_ip: Option<String>,
+    pub uptime: Option<String>,
+    #[serde(rename = "type")]
+    pub runtime_type: RuntimeType,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct HealthCheck {
+    pub id: String,
+    pub protocol: HealthCheckProtocol,
+    pub path: String,
+    pub port: i64,
+    pub interval: i64,
+    pub timeout: i64,
+    pub initial_delay: i64,
+    pub max_retries: i64,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub enum HealthCheckProtocol {
+    #[serde(rename = "http")]
+    HTTP,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct HealthCheckConfig {
+    pub protocol: HealthCheckProtocol,
+    pub path: String,
+    pub port: i64,
+    pub interval: i64,
+    pub timeout: i64,
+    pub initial_delay: i64,
+    pub max_retries: i64,
 }
 
 // OLD //

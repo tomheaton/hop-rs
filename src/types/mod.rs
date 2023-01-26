@@ -8,16 +8,16 @@ pub mod registry;
 pub mod users;
 
 // TODO: implement error message
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct APIError;
 
-#[derive(Deserialize, Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct APIResponse<T> {
     pub success: bool,
     pub data: Option<T>,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct APIResponseOld {
     success: bool,
     message: String,
