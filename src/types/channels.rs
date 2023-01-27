@@ -12,6 +12,7 @@ pub enum ChannelType {
     Unprotected,
 }
 
+// TODO: what is this?
 // #[derive(Debug, Serialize, Deserialize)]
 // pub struct ChannelState {}
 

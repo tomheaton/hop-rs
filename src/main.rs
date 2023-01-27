@@ -9,7 +9,7 @@ use dotenv::dotenv;
 use rand::Rng;
 
 use hop::Hop;
-use hop::types::ignite::{DeploymentConfig, HealthCheckConfig, HealthCheckProtocol, Image, Resources, RestartPolicy, RuntimeType};
+use hop::types::ignite::{CreateHealthCheckConfig, DeploymentConfig, HealthCheckProtocol, Image, Resources, RestartPolicy, RuntimeType, UpdateHealthCheckConfig};
 
 #[tokio::main]
 async fn main() {
@@ -21,12 +21,9 @@ async fn main() {
     // let my_token = env::var("PERSONAL_TOKEN").expect("PERSONAL_TOKEN needed!");
     let hop = Hop::new(my_token.as_str());
 
-    let rooms = hop.pipe.get_rooms().await.unwrap();
-    println!("rooms: {:#?}", rooms);
-
     // let health_check = hop.ignite.create_healthcheck(
     //     "deployment_MTAzMjMxNjU1MDg0OTIwODMz",
-    //     HealthCheckConfig {
+    //     CreateHealthCheckConfig {
     //         protocol: HealthCheckProtocol::HTTP,
     //         path: "/".to_string(),
     //         port: 0,
@@ -37,6 +34,19 @@ async fn main() {
     //     },
     // ).await.unwrap();
     // println!("health_check: {:#?}", health_check);
+
+    hop.ignite.update_healthcheck(
+        "deployment_MTAzMjMxNjU1MDg0OTIwODMz",
+        UpdateHealthCheckConfig {
+            protocol: None,
+            path: None,
+            port: None,
+            interval: None,
+            timeout: None,
+            initial_delay: None,
+            max_retries: None,
+        },
+    ).await.unwrap();
 
     // TODO: this
     // Example: Creating a deployment
