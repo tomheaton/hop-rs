@@ -39,7 +39,7 @@ async fn main() {
         "deployment_MTAzMjMxNjU1MDg0OTIwODMz",
         UpdateHealthCheckConfig {
             protocol: None,
-            path: None,
+            path: Some("/aish".to_string()),
             port: None,
             interval: None,
             timeout: None,

@@ -148,7 +148,13 @@ impl Ignite {
         println!("Updating a healthcheck");
 
         let mut config = serde_json::json!(config);
-        config.retain(|_, v| v.is_some());
+        config = config.as_object().unwrap().iter().fold(serde_json::json!({}), |mut acc, (k, v)| {
+            if !v.is_null() {
+                acc[k] = v.clone();
+            }
+            return acc;
+        });
+
         println!("config: {:?}", config);
 
         self.client.patch(
