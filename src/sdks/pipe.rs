@@ -3,6 +3,7 @@ use crate::types::pipe::{DeliveryProtocol, IngestProtocol, Region, Room, RoomOpt
 
 pub struct Pipe {
     pub token: String,
+    pub client: APIClient,
 }
 
 impl Pipe {
@@ -11,6 +12,7 @@ impl Pipe {
     ) -> Pipe {
         return Pipe {
             token: token.to_owned(),
+            client: APIClient::new(token),
         };
     }
 
@@ -21,9 +23,7 @@ impl Pipe {
     ) -> Result<Vec<Room>, APIError> {
         println!("Getting all rooms");
 
-        let response = APIClient::new(
-            self.token.as_str(),
-        ).get(
+        let response = self.client.get(
             "/v1/pipe/rooms"
         ).await.unwrap();
 
@@ -63,9 +63,7 @@ impl Pipe {
             config["llhls_config"] = serde_json::json!(options.hls_config.unwrap());
         }
 
-        let response = APIClient::new(
-            self.token.as_str(),
-        ).post(
+        let response = self.client.post(
             "/v1/pipe/rooms",
             config,
         ).await.unwrap();
@@ -84,9 +82,7 @@ impl Pipe {
     ) -> Result<(), APIError> {
         println!("Deleting a room");
 
-        return APIClient::new(
-            self.token.as_str(),
-        ).delete(
+        return self.client.delete(
             format!("/v1/pipe/rooms/{}", room_id).as_str()
         ).await;
     }

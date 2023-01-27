@@ -4,6 +4,7 @@ use crate::types::registry::Image;
 
 pub struct Registry {
     pub token: String,
+    pub client: APIClient,
 }
 
 impl Registry {
@@ -12,6 +13,7 @@ impl Registry {
     ) -> Registry {
         return Registry {
             token: token.to_owned(),
+            client: APIClient::new(token),
         };
     }
 
@@ -23,9 +25,7 @@ impl Registry {
     ) -> Result<Vec<String>, APIError> {
         println!("Getting all images");
 
-        let response = APIClient::new(
-            self.token.as_str(),
-        ).get(
+        let response = self.client.get(
             "/v1/registry/images"
         ).await.unwrap();
 
@@ -40,9 +40,7 @@ impl Registry {
     ) -> Result<(), APIError> {
         println!("Deleting an image with image: {}", image);
 
-        APIClient::new(
-            self.token.as_str(),
-        ).delete(
+        self.client.delete(
             format!("/v1/registry/images/{}", image).as_str(),
         ).await.unwrap();
 
@@ -55,9 +53,7 @@ impl Registry {
     ) -> Result<Vec<Image>, APIError> {
         println!("Getting image manifest");
 
-        let response = APIClient::new(
-            self.token.as_str(),
-        ).get(
+        let response = self.client.get(
             format!("/v1/registry/{}/manifest", image).as_str(),
         ).await.unwrap();
 

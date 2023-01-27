@@ -7,7 +7,7 @@ use crate::sdks::registry::Registry;
 use crate::sdks::users::Users;
 
 pub struct Hop {
-    pub client: APIClient,
+    // pub client: APIClient,
 
     pub channels: Channels,
     pub ignite: Ignite,
@@ -30,12 +30,13 @@ impl Hop {
             panic!("Invalid token type. Must be a project token or a personal access token.");
         }
 
-        let client = APIClient::new(
-            token,
-        );
+        // TODO: create client here
+        // let client = APIClient::new(
+        //     token,
+        // );
 
         return Hop {
-            client,
+            // client,
 
             channels: Channels::new(token),
             ignite: Ignite::new(token),

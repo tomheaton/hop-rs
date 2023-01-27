@@ -25,6 +25,7 @@ pub struct Pat {
 
 pub struct Users {
     pub token: String,
+    pub client: APIClient,
 }
 
 impl Users {
@@ -33,6 +34,7 @@ impl Users {
     ) -> Users {
         return Users {
             token: token.to_owned(),
+            client: APIClient::new(token),
         };
     }
 
@@ -43,9 +45,7 @@ impl Users {
     ) -> Result<User, APIError> {
         println!("Getting user information");
 
-        let response = APIClient::new(
-            self.token.as_str(),
-        ).get(
+        let response = self.client.get(
             "/v1/users/@me"
         ).await.unwrap();
 
@@ -61,9 +61,7 @@ impl Users {
     ) -> Result<Vec<Pat>, APIError> {
         println!("Getting user pats");
 
-        let response = APIClient::new(
-            self.token.as_str(),
-        ).get(
+        let response = self.client.get(
             "/v1/users/@me/pats"
         ).await.unwrap();
 
@@ -79,9 +77,7 @@ impl Users {
         println!("Creating a user pat with name: {}", name);
 
         // TODO: fix invalid route error (actually just dumb)
-        let response = APIClient::new(
-            self.token.as_str(),
-        ).post(
+        let response = self.client.post(
             "/v1/users/@me/pats",
             // serde_json::json!(name),
             serde_json::json!({
@@ -101,9 +97,7 @@ impl Users {
         println!("Deleting a user pat with id: {}", id);
 
         // TODO: fix invalid route error (actually just dumb)
-        APIClient::new(
-            self.token.as_str(),
-        ).delete(
+        self.client.delete(
             format!("/v1/users/@me/pats/{}", id).as_str()
         ).await.unwrap();
 

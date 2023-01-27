@@ -3,6 +3,7 @@ use crate::types::ignite::{Container, ContainerState, DeploymentConfig, Deployme
 
 pub struct Ignite {
     pub token: String,
+    pub client: APIClient,
 }
 
 impl Ignite {
@@ -11,6 +12,7 @@ impl Ignite {
     ) -> Ignite {
         return Ignite {
             token: token.to_owned(),
+            client: APIClient::new(token),
         };
     }
 
@@ -137,9 +139,7 @@ impl Ignite {
             });
         println!("x: {:#?}", x);
 
-        let response = APIClient::new(
-            self.token.as_str(),
-        ).post(
+        let response = self.client.post(
             format!("/v1/ignite/deployments/{}/health-check", deployment_id).as_str(),
             serde_json::json!({
                 "config": config,
@@ -179,18 +179,14 @@ impl Ignite {
         println!("Deleting an ignite deployment");
 
         if !recreate {
-            APIClient::new(
-                self.token.as_str(),
-            ).delete(
+            self.client.delete(
                 format!("/v1/ignite/containers/{}", container_id).as_str(),
             ).await.unwrap();
 
             return Ok(None);
         }
 
-        let response = APIClient::new(
-            self.token.as_str(),
-        ).delete_with_return(
+        let response = self.client.delete_with_return(
             format!("/v1/ignite/containers/{}?recreate=true", container_id).as_str(),
             // TODO: add recreate option to query params
             // format!("/v1/ignite/containers/{}", container_id).as_str(),
@@ -208,9 +204,7 @@ impl Ignite {
     ) -> Result<(), APIError> {
         println!("Starting an ignite container");
 
-        APIClient::new(
-            self.token.as_str(),
-        ).put(
+        self.client.put(
             format!("/v1/ignite/containers/{}/state", container_id).as_str(),
             serde_json::json!({
                 "preferred_state": ContainerState::Running,
@@ -226,9 +220,7 @@ impl Ignite {
     ) -> Result<(), APIError> {
         println!("Stopping an ignite container");
 
-        APIClient::new(
-            self.token.as_str(),
-        ).put(
+        self.client.put(
             format!("/v1/ignite/containers/{}/state", container_id).as_str(),
             serde_json::json!({
                 "preferred_state": ContainerState::Stopped
@@ -246,9 +238,7 @@ impl Ignite {
     ) -> Result<Vec<DeploymentLog>, APIError> {
         println!("Getting an ignite container's logs");
 
-        let response = APIClient::new(
-            self.token.as_str(),
-        ).get(
+        let response = self.client.get(
             // TODO: add options as query params
             format!("/v1/ignite/containers/{}/logs?offset=0", container_id).as_str(),
         ).await.unwrap();

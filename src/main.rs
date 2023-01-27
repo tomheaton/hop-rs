@@ -21,20 +21,22 @@ async fn main() {
     // let my_token = env::var("PERSONAL_TOKEN").expect("PERSONAL_TOKEN needed!");
     let hop = Hop::new(my_token.as_str());
 
-    let health_check = hop.ignite.create_healthcheck(
-        "deployment_MTAzMjMxNjU1MDg0OTIwODMz",
-        HealthCheckConfig {
-            protocol: HealthCheckProtocol::HTTP,
-            path: "/".to_string(),
-            port: 0,
-            interval: 0,
-            timeout: 0,
-            initial_delay: 0,
-            max_retries: 0,
-        },
-    ).await.unwrap();
+    let rooms = hop.pipe.get_rooms().await.unwrap();
+    println!("rooms: {:#?}", rooms);
 
-    println!("health_check: {:#?}", health_check);
+    // let health_check = hop.ignite.create_healthcheck(
+    //     "deployment_MTAzMjMxNjU1MDg0OTIwODMz",
+    //     HealthCheckConfig {
+    //         protocol: HealthCheckProtocol::HTTP,
+    //         path: "/".to_string(),
+    //         port: 0,
+    //         interval: 0,
+    //         timeout: 0,
+    //         initial_delay: 0,
+    //         max_retries: 0,
+    //     },
+    // ).await.unwrap();
+    // println!("health_check: {:#?}", health_check);
 
     // TODO: this
     // Example: Creating a deployment

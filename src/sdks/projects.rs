@@ -5,6 +5,7 @@ use crate::types::projects::Member;
 
 pub struct Projects {
     pub token: String,
+    pub client: APIClient,
 }
 
 impl Projects {
@@ -12,7 +13,8 @@ impl Projects {
         token: &str
     ) -> Projects {
         return Projects {
-            token: token.to_owned()
+            token: token.to_owned(),
+            client: APIClient::new(token),
         };
     }
 
@@ -23,9 +25,7 @@ impl Projects {
     ) -> Result<Vec<Member>, APIError> {
         println!("Getting all project members");
 
-        let response = APIClient::new(
-            self.token.as_str(),
-        ).get(
+        let response = self.client.get(
             "/v1/projects/@this/members"
         ).await.unwrap();
 
@@ -41,9 +41,7 @@ impl Projects {
     ) -> Result<Member, APIError> {
         println!("Getting current project member");
 
-        let response = APIClient::new(
-            self.token.as_str(),
-        ).get(
+        let response = self.client.get(
             // format!("/v1/projects/{}/members/@me", project_id).as_str()
             "/v1/projects/@this/members/@me"
         ).await.unwrap();
@@ -60,9 +58,7 @@ impl Projects {
     ) -> Result<serde_json::Value, APIError> {
         println!("Getting all project tokens");
 
-        return APIClient::new(
-            self.token.as_str(),
-        ).get(
+        return self.client.get(
             "/v1/projects/@this/tokens"
         ).await;
     }
@@ -73,9 +69,7 @@ impl Projects {
     ) -> Result<serde_json::Value, APIError> {
         println!("Creating a project token with flags: {}", flags);
 
-        return APIClient::new(
-            self.token.as_str(),
-        ).post(
+        return self.client.post(
             "/v1/projects/@this/tokens",
             // serde_json::json!(flags),
             serde_json::json!({
@@ -90,9 +84,7 @@ impl Projects {
     ) -> Result<(), APIError> {
         println!("Deleting a project token with id: {}", id);
 
-        return APIClient::new(
-            self.token.as_str(),
-        ).delete(
+        return self.client.delete(
             format!("/v1/projects/@this/tokens/{}", id).as_str(),
         ).await;
     }
@@ -104,9 +96,7 @@ impl Projects {
     ) -> Result<serde_json::Value, APIError> {
         println!("Getting all project secrets");
 
-        return APIClient::new(
-            self.token.as_str(),
-        ).get(
+        return self.client.get(
             "/v1/projects/@this/secrets"
         ).await;
     }
@@ -118,9 +108,7 @@ impl Projects {
     ) -> Result<serde_json::Value, APIError> {
         println!("Creating a project secret with name: {} and value: {}", name, value);
 
-        return APIClient::new(
-            self.token.as_str(),
-        ).put_raw(
+        return self.client.put_raw(
             format!("/v1/projects/@this/secrets/{}", name).as_str(),
             value,
         ).await;
@@ -132,9 +120,7 @@ impl Projects {
     ) -> Result<(), APIError> {
         println!("Deleting a project secret with id: {}", id);
 
-        return APIClient::new(
-            self.token.as_str(),
-        ).delete(
+        return self.client.delete(
             format!("/v1/projects/@this/secrets/{}", id).as_str(),
         ).await;
     }

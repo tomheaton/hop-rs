@@ -6,6 +6,7 @@ use crate::types::channels::{Channel, ChannelToken, ChannelType};
 
 pub struct Channels {
     pub token: String,
+    pub client: APIClient,
 }
 
 impl Channels {
@@ -14,6 +15,7 @@ impl Channels {
     ) -> Channels {
         return Channels {
             token: token.to_owned(),
+            client: APIClient::new(token),
         };
     }
 
@@ -24,9 +26,7 @@ impl Channels {
     ) -> Result<Vec<Channel>, APIError> {
         println!("Getting all channels");
 
-        let response = APIClient::new(
-            self.token.as_str(),
-        ).get(
+        let response = self.client.get(
             "/v1/channels"
         ).await.unwrap();
 
@@ -41,9 +41,7 @@ impl Channels {
     ) -> Result<Channel, APIError> {
         println!("Getting a channel");
 
-        let response = APIClient::new(
-            self.token.as_str(),
-        ).get(
+        let response = self.client.get(
             format!("/v1/channels/{}", channel_id).as_str()
         ).await.unwrap();
 
@@ -65,9 +63,7 @@ impl Channels {
 
         match channel_id {
             Some(id) => {
-                response = APIClient::new(
-                    self.token.as_str(),
-                ).put(
+                response = self.client.put(
                     format!("/v1/channels/{}", id).as_str(),
                     serde_json::json!({
                         "type": channel_type,
@@ -76,9 +72,7 @@ impl Channels {
                 ).await.unwrap();
             }
             None => {
-                response = APIClient::new(
-                    self.token.as_str(),
-                ).post(
+                response = self.client.post(
                     "/v1/channels",
                     serde_json::json!({
                         "type": channel_type,
@@ -99,9 +93,7 @@ impl Channels {
     ) -> Result<(), APIError> {
         println!("Deleting a channel");
 
-        return APIClient::new(
-            self.token.as_str(),
-        ).delete(
+        return self.client.delete(
             format!("/v1/channels/{}", channel_id).as_str()
         ).await;
     }
@@ -113,9 +105,7 @@ impl Channels {
     ) -> Result<HashMap<String, i64>, APIError> {
         println!("Getting a channel's stats");
 
-        let response = APIClient::new(
-            self.token.as_str(),
-        ).get(
+        let response = self.client.get(
             format!("/v1/channels/{}/stats", channel_id).as_str()
         ).await.unwrap();
 
@@ -132,9 +122,7 @@ impl Channels {
         println!("Subscribing tokens to channel");
 
         for token in tokens {
-            APIClient::new(
-                self.token.as_str(),
-            ).put_none(
+            self.client.put_none(
                 format!("/v1/channels/{}/subscribers/{}", channel_id, token).as_str(),
             ).await.unwrap();
         }
@@ -149,9 +137,7 @@ impl Channels {
     ) -> Result<(), APIError> {
         println!("Subscribing token to channel");
 
-        APIClient::new(
-            self.token.as_str(),
-        ).put_none(
+        self.client.put_none(
             format!("/v1/channels/{}/subscribers/{}", channel_id, token_id).as_str(),
         ).await.unwrap();
 
@@ -163,9 +149,7 @@ impl Channels {
     ) -> Result<HashMap<String, i64>, APIError> {
         println!("Getting all channel tokens");
 
-        let response = APIClient::new(
-            self.token.as_str(),
-        ).get(
+        let response =self.client.get(
             format!("/v1/channels/{}/tokens", channel_id).as_str()
         ).await.unwrap();
 
@@ -181,9 +165,7 @@ impl Channels {
     ) -> Result<(), APIError> {
         println!("Setting channel state");
 
-        APIClient::new(
-            self.token.as_str(),
-        ).put(
+        self.client.put(
             format!("/v1/channels/{}/state", channel_id).as_str(),
             serde_json::json!(state),
         ).await.unwrap();
@@ -198,9 +180,7 @@ impl Channels {
     ) -> Result<(), APIError> {
         println!("Patching channel state");
 
-        APIClient::new(
-            self.token.as_str(),
-        ).patch(
+        self.client.patch(
             format!("/v1/channels/{}/state", channel_id).as_str(),
             serde_json::json!(state),
         ).await.unwrap();
@@ -216,9 +196,7 @@ impl Channels {
     ) -> Result<(), APIError> {
         println!("Publishing a channel message");
 
-        APIClient::new(
-            self.token.as_str(),
-        ).post(
+        self.client.post(
             format!("/v1/channels/{}/messages", channel_id).as_str(),
             serde_json::json!({
                 "e": event,
@@ -237,9 +215,7 @@ impl Channels {
     ) -> Result<ChannelToken, APIError> {
         println!("Getting a channel token");
 
-        let response = APIClient::new(
-            self.token.as_str(),
-        ).get(
+        let response = self.client.get(
             format!("/v1/channels/tokens/{}", token_id).as_str()
         ).await.unwrap();
 
@@ -260,9 +236,7 @@ impl Channels {
         // TODO: inline this? (intellisense not available inside the macro)
         let state = state.unwrap_or(HashMap::new());
 
-        let response = APIClient::new(
-            self.token.as_str(),
-        ).post(
+        let response = self.client.post(
             "/v1/channels/tokens",
             serde_json::json!(state),
         ).await.unwrap();
@@ -281,9 +255,7 @@ impl Channels {
     ) -> Result<(), APIError> {
         println!("Deleting a channel token");
 
-        return APIClient::new(
-            self.token.as_str(),
-        ).delete(
+        return self.client.delete(
             format!("/v1/channels/tokens/{}", token_id).as_str()
         ).await;
     }
@@ -295,9 +267,7 @@ impl Channels {
     ) -> Result<ChannelToken, APIError> {
         println!("Setting a channel token's state");
 
-        let response = APIClient::new(
-            self.token.as_str(),
-        ).patch(
+        let response = self.client.patch(
             format!("/v1/channels/tokens/{}", token_id).as_str(),
             serde_json::json!(state),
         ).await.unwrap();
@@ -316,9 +286,7 @@ impl Channels {
     ) -> Result<bool, APIError> {
         println!("Checking if channel token is online");
 
-        let response = APIClient::new(
-            self.token.as_str(),
-        ).get(
+        let response = self.client.get(
             format!("/v1/channels/tokens/{}", token_id).as_str()
         ).await.unwrap();
 
@@ -337,9 +305,7 @@ impl Channels {
     ) -> Result<(), APIError> {
         println!("Publishing a direct message to a channel token");
 
-        APIClient::new(
-            self.token.as_str(),
-        ).post(
+        self.client.post(
             format!("/v1/channels/tokens/{}/messages", token_id).as_str(),
             serde_json::json!({
                 "e": event,
