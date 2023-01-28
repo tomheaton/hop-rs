@@ -9,7 +9,7 @@ use dotenv::dotenv;
 use rand::Rng;
 
 use hop::Hop;
-use hop::types::ignite::{CreateHealthCheckConfig, DeploymentConfig, HealthCheckProtocol, Image, Resources, RestartPolicy, RuntimeType, UpdateHealthCheckConfig};
+use hop::types::ignite::{CreateHealthCheckConfig, DeploymentConfig, GatewayConfig, GatewayProtocol, GatewayType, HealthCheckProtocol, Image, Resources, RestartPolicy, RuntimeType, UpdateHealthCheckConfig};
 
 #[tokio::main]
 async fn main() {
@@ -60,13 +60,35 @@ async fn main() {
 
     println!("rollout: {:#?}", rollout);*/
 
-    let deployments = hop.ignite.get_deployments().await.unwrap();
-    println!("deployments: {:#?}", deployments);
+    // let deployments = hop.ignite.get_deployments().await.unwrap();
+    // println!("deployments: {:#?}", deployments);
+    //
+    // let deployment = hop.ignite.get_deployment_by_name(
+    //     "redis"
+    // ).await.unwrap();
+    // println!("deployment: {:#?}", deployment);
 
-    let deployment = hop.ignite.get_deployment_by_name(
-        "redis"
-    ).await.unwrap();
-    println!("deployment: {:#?}", deployment);
+    // let new_gateway = hop.ignite.create_gateway(
+    //     "deployment_MTAzMjMxNjU1MDg0OTIwODMz",
+    //     GatewayConfig {
+    //         gateway_type: GatewayType::Internal,
+    //         protocol: GatewayProtocol::HTTP,
+    //         target_port: 80,
+    //         name: "phineas-gateway".to_string(),
+    //         internal_domain: Some("phineas".to_string()),
+    //     },
+    // ).await.unwrap();
+    // println!("new_gateway: {:#?}", new_gateway);
+    //
+    // let gateways = hop.ignite.get_gateways(
+    //     "deployment_MTAzMjMxNjU1MDg0OTIwODMz"
+    // ).await.unwrap();
+    // println!("gateways: {:#?}", gateways);
+    //
+    // let gateway = hop.ignite.get_gateway(
+    //     "gateway_MTAzMjMxNzA5MDQ0NjQxNzk0"
+    // ).await.unwrap();
+    // println!("gateway: {:#?}", gateway);
 
     // TODO: this
     // Example: Creating a deployment

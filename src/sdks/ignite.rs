@@ -1,7 +1,5 @@
-use serde_json::Value;
-
 use crate::{APIClient, APIError, APIResponseOld};
-use crate::types::ignite::{Container, ContainerState, CreateHealthCheckConfig, Deployment, DeploymentConfig, DeploymentLog, HealthCheck, Rollout, StorageStats, UpdateHealthCheckConfig};
+use crate::types::ignite::{Container, ContainerState, CreateHealthCheckConfig, Deployment, DeploymentConfig, DeploymentLog, Gateway, GatewayConfig, GatewayType, HealthCheck, Rollout, StorageStats, UpdateHealthCheckConfig};
 
 pub struct Ignite {
     pub token: String,
@@ -94,7 +92,7 @@ impl Ignite {
 
         let response = self.client.post(
             format!("/v1/ignite/deployments/{}/rollouts", deployment_id).as_str(),
-            Value::Null,
+            serde_json::Value::Null,
         ).await.unwrap();
 
         let rollout = response["data"]["rollout"].to_owned();
@@ -140,28 +138,72 @@ impl Ignite {
         return Ok(serde_json::from_value(containers).unwrap());
     }
 
-    // TODO: these
     // Gateways:
 
     pub async fn get_gateways(
         &self,
-    ) -> () {
+        deployment_id: &str,
+    ) -> Result<Vec<Gateway>, APIError> {
         println!("Getting all ignite gateways");
-        panic!("not implemented!");
+
+        let response = self.client.get(
+            format!("/v1/ignite/deployments/{}/gateways", deployment_id).as_str(),
+        ).await.unwrap();
+
+        let gateways = response["data"]["gateways"].to_owned();
+
+        return Ok(serde_json::from_value(gateways).unwrap());
     }
 
     pub async fn get_gateway(
         &self,
-    ) -> () {
+        gateway_id: &str,
+    ) -> Result<Gateway, APIError> {
         println!("Getting an ignite gateway");
-        panic!("not implemented!");
+
+        let response = self.client.get(
+            format!("/v1/ignite/gateways/{}", gateway_id).as_str(),
+        ).await.unwrap();
+
+        let gateway = response["data"]["gateway"].to_owned();
+
+        return Ok(serde_json::from_value(gateway).unwrap());
     }
 
+    // TODO: this
     pub async fn create_gateway(
         &self,
-    ) -> () {
+        deployment_id: &str,
+        config: GatewayConfig,
+    ) -> Result<Gateway, APIError> {
         println!("Creating an ignite gateway");
-        panic!("not implemented!");
+
+        let mut data = serde_json::json!({
+            "type": config.gateway_type,
+            "protocol": config.protocol,
+            "target_port": config.target_port,
+            "name": config.name,
+        });
+
+        match config.gateway_type {
+            GatewayType::Internal => {
+                if config.internal_domain.is_some() {
+                    data["internal_domain"] = serde_json::json!(config.internal_domain.unwrap());
+                } else {
+                    panic!("internal_domain is required for internal gateways");
+                }
+            }
+            _ => {}
+        }
+
+        let response = self.client.post(
+            format!("/v1/ignite/deployments/{}/gateways", deployment_id).as_str(),
+            data,
+        ).await.unwrap();
+
+        let gateway = response["data"]["gateway"].to_owned();
+
+        return Ok(serde_json::from_value(gateway).unwrap());
     }
 
     pub async fn add_domain(
@@ -195,7 +237,6 @@ impl Ignite {
     }
 
     // TODO: check this
-
     /*pub async fn create_domain(
         &self,
     ) -> () {

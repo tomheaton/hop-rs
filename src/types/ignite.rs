@@ -182,18 +182,31 @@ pub enum GatewayProtocol {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+pub struct GatewayConfig {
+    #[serde(rename = "type")]
+    pub gateway_type: GatewayType,
+    pub protocol: GatewayProtocol,
+    pub target_port: i64,
+    pub name: String,
+    pub internal_domain: Option<String>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Gateway {
     pub id: String,
+    #[serde(rename = "type")]
     pub gateway_type: GatewayType,
-    pub name: String,
+    pub name: Option<String>,
     pub protocol: Option<GatewayProtocol>,
     pub deployment_id: String,
     pub created_at: String,
     pub hopsh_domain: Option<String>,
-    pub hopsh_domain_enabled: bool,
+    pub hopsh_domain_enabled: Option<bool>,
     pub internal_domain: Option<String>,
     pub target_port: Option<i64>,
-    pub domains: Vec<Domain>,
+    pub primary: Option<bool>,
+    // TODO: this is not in GET/gateways response
+    // pub domains: Vec<Domain>,
 }
 
 impl Gateway {
