@@ -6,17 +6,17 @@ use crate::types::pipe::Region;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Resources {
-    pub vcpu: i64,
+    pub vcpu: f64,
     pub ram: String,
     // TODO: use array instead of vector?
-    pub vgpu: Vec<Vgpu>,
+    pub vgpu: Option<Vec<Vgpu>>,
 }
 
 impl Resources {
     pub fn new(
-        vcpu: i64,
+        vcpu: f64,
         ram: &str,
-        vgpu: Vec<Vgpu>,
+        vgpu: Option<Vec<Vgpu>>,
     ) -> Resources {
         return Resources {
             vcpu,
@@ -219,7 +219,7 @@ pub struct DeploymentMetaData {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct Deployment {
+pub struct DeploymentOld {
     pub id: String,
     pub name: String,
     pub container_count: i64,
@@ -227,6 +227,30 @@ pub struct Deployment {
     pub metadata: Option<String>,
     pub build_cache_enabled: bool,
     pub build_settings: BuildSettings,
+}
+
+// TODO: this
+// #[derive(Debug, Serialize, Deserialize)]
+pub struct DeploymentRollout {}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Deployment {
+    pub id: String,
+    pub name: String,
+    pub build_id: Option<String>,
+    pub active_build: Option<String>,
+    pub active_rollout: Option<String>,
+    // TODO: this
+    // pub latest_rollout: Option<DeploymentRollout>,
+    pub created_at: String,
+    pub target_container_count: i64,
+    pub container_count: i64,
+    pub running_container_count: i64,
+    pub build_settings: Option<BuildSettings>,
+    pub build_cache_enabled: bool,
+    // TODO: this
+    // pub metadata: Option<String>,
+    pub config: DeploymentConfig,
 }
 
 impl Deployment {
@@ -256,9 +280,13 @@ impl Deployment {
     }
 }
 
+
+// TODO: remove option from hashmap and vec fields in struct but keep in constructor
+
+// TODO: this is the returned config from the GET deployment endpoint, not the creation config
 #[derive(Debug, Serialize, Deserialize)]
 pub struct DeploymentConfig {
-    name: String,
+    // name: String,
     container_strategy: ContainerStrategy,
     #[serde(rename = "type")]
     runtime_type: RuntimeType,
@@ -268,7 +296,8 @@ pub struct DeploymentConfig {
     env: Option<HashMap<String, String>>,
     resources: Resources,
     restart_policy: RestartPolicy,
-    volume: Option<String>,
+    volume: Option<HashMap<String, String>>,
+    // volume: Option<Vec<String>>,
     entrypoint: Option<Vec<String>>,
 }
 
@@ -283,11 +312,12 @@ impl DeploymentConfig {
         env: Option<HashMap<&str, &str>>,
         resources: Resources,
         restart_policy: RestartPolicy,
-        volume: Option<&str>,
+        // volume: Option<&str>,
+        volume: Option<HashMap<&str, &str>>,
         entrypoint: Option<Vec<&str>>,
     ) -> DeploymentConfig {
         return DeploymentConfig {
-            name: name.to_owned(),
+            // name: name.to_owned(),
             container_strategy: ContainerStrategy::Manual,
             runtime_type: runtime_type.clone(),
             version: "12-12-2022".to_owned(),
@@ -296,10 +326,11 @@ impl DeploymentConfig {
             env: env.map(|e| e.into_iter().map(|(k, v)| (k.to_owned(), v.to_owned())).collect()),
             resources,
             restart_policy,
-            volume: match runtime_type {
+            /*volume: match runtime_type {
                 RuntimeType::Stateful => volume.map(|v| v.to_owned()),
                 _ => None,
-            },
+            },*/
+            volume: volume.map(|e| e.into_iter().map(|(k, v)| (k.to_owned(), v.to_owned())).collect()),
             entrypoint: entrypoint.map(|e| e.into_iter().map(|e| e.to_owned()).collect()),
         };
     }
@@ -379,4 +410,29 @@ pub struct HealthCheckConfig {
     pub timeout: i64,
     pub initial_delay: i64,
     pub max_retries: i64,
+}
+
+// TODO: this
+#[derive(Debug, Serialize, Deserialize)]
+pub struct BuildCacheStats {}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct VolumeStats {
+    pub provisioned_size: i64,
+    pub used_size: i64,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct StorageStats {
+    pub build_cache: Option<BuildCacheStats>,
+    pub volume: VolumeStats,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Rollout {
+    pub count: i64,
+    pub created_at: String,
+    pub deployment_id: String,
+    pub id: String,
+    pub state: ContainerState,
 }

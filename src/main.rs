@@ -35,18 +35,38 @@ async fn main() {
     // ).await.unwrap();
     // println!("health_check: {:#?}", health_check);
 
-    hop.ignite.update_healthcheck(
-        "deployment_MTAzMjMxNjU1MDg0OTIwODMz",
-        UpdateHealthCheckConfig {
-            protocol: None,
-            path: Some("/aish".to_string()),
-            port: None,
-            interval: None,
-            timeout: None,
-            initial_delay: None,
-            max_retries: None,
-        },
+    // hop.ignite.update_healthcheck(
+    //     "deployment_MTAzMjMxNjU1MDg0OTIwODMz",
+    //     UpdateHealthCheckConfig {
+    //         protocol: None,
+    //         path: Some("/aish".to_string()),
+    //         port: None,
+    //         interval: None,
+    //         timeout: None,
+    //         initial_delay: None,
+    //         max_retries: None,
+    //     },
+    // ).await.unwrap();
+
+    /*let storage = hop.ignite.get_storage_stats(
+        "deployment_MTAzMjMxNjU1MDg0OTIwODMz"
     ).await.unwrap();
+
+    println!("storage: {:#?}", storage);*/
+
+    /*let rollout = hop.ignite.rollout_deployment(
+        "deployment_MTAzMjMxNjU1MDg0OTIwODMz"
+    ).await.unwrap();
+
+    println!("rollout: {:#?}", rollout);*/
+
+    let deployments = hop.ignite.get_deployments().await.unwrap();
+    println!("deployments: {:#?}", deployments);
+
+    let deployment = hop.ignite.get_deployment_by_name(
+        "redis"
+    ).await.unwrap();
+    println!("deployment: {:#?}", deployment);
 
     // TODO: this
     // Example: Creating a deployment

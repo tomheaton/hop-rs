@@ -1,5 +1,7 @@
+use serde_json::Value;
+
 use crate::{APIClient, APIError, APIResponseOld};
-use crate::types::ignite::{Container, ContainerState, CreateHealthCheckConfig, DeploymentConfig, DeploymentLog, HealthCheck, UpdateHealthCheckConfig};
+use crate::types::ignite::{Container, ContainerState, CreateHealthCheckConfig, Deployment, DeploymentConfig, DeploymentLog, HealthCheck, Rollout, StorageStats, UpdateHealthCheckConfig};
 
 pub struct Ignite {
     pub token: String,
@@ -20,18 +22,49 @@ impl Ignite {
 
     pub async fn get_deployments(
         &self,
-    ) -> () {
+    ) -> Result<Vec<Deployment>, APIError> {
         println!("Getting all ignite deployments");
-        panic!("not implemented!");
+
+        let response = self.client.get(
+            "/v1/ignite/deployments",
+        ).await.unwrap();
+
+        let deployments = response["data"]["deployments"].to_owned();
+
+        return Ok(serde_json::from_value(deployments).unwrap());
     }
 
     pub async fn get_deployment(
         &self,
-    ) -> () {
+        deployment_id: &str,
+    ) -> Result<Deployment, APIError> {
         println!("Getting an ignite deployment");
-        panic!("not implemented!");
+
+        let response = self.client.get(
+            format!("/v1/ignite/deployments/{}", deployment_id).as_str(),
+        ).await.unwrap();
+
+        let deployment = response["data"]["deployment"].to_owned();
+
+        return Ok(serde_json::from_value(deployment).unwrap());
     }
 
+    pub async fn get_deployment_by_name(
+        &self,
+        deployment_name: &str,
+    ) -> Result<Deployment, APIError> {
+        println!("Getting an ignite deployment by name");
+
+        let response = self.client.get(
+            format!("/v1/ignite/deployments/search?name={}", deployment_name).as_str(),
+        ).await.unwrap();
+
+        let deployment = response["data"]["deployment"].to_owned();
+
+        return Ok(serde_json::from_value(deployment).unwrap());
+    }
+
+    // TODO: this
     pub async fn create_deployment(
         &self,
         deployment: DeploymentConfig,
@@ -42,18 +75,34 @@ impl Ignite {
 
     pub async fn delete_deployment(
         &self,
-    ) -> () {
+        deployment_id: &str,
+    ) -> Result<(), APIError> {
         println!("Deleting an ignite deployment");
-        panic!("not implemented!");
+
+        self.client.delete(
+            format!("/v1/ignite/deployments/{}", deployment_id).as_str(),
+        ).await.unwrap();
+
+        return Ok(());
     }
 
     pub async fn rollout_deployment(
         &self,
-    ) -> () {
+        deployment_id: &str,
+    ) -> Result<Rollout, APIError> {
         println!("Rolling out an ignite deployment");
-        panic!("not implemented!");
+
+        let response = self.client.post(
+            format!("/v1/ignite/deployments/{}/rollouts", deployment_id).as_str(),
+            Value::Null,
+        ).await.unwrap();
+
+        let rollout = response["data"]["rollout"].to_owned();
+
+        return Ok(serde_json::from_value(rollout).unwrap());
     }
 
+    // TODO: this
     pub async fn update_deployment(
         &self,
     ) -> () {
@@ -63,18 +112,35 @@ impl Ignite {
 
     pub async fn get_storage_stats(
         &self,
-    ) -> () {
+        deployment_id: &str,
+    ) -> Result<StorageStats, APIError> {
         println!("Getting an ignite deployment's storage stats");
-        panic!("not implemented!");
+
+        let response = self.client.get(
+            format!("/v1/ignite/deployments/{}/storage", deployment_id).as_str(),
+        ).await.unwrap();
+
+        let storage_stats = response["data"].to_owned();
+
+        return Ok(serde_json::from_value(storage_stats).unwrap());
     }
 
     pub async fn get_containers(
         &self,
-    ) -> () {
+        deployment_id: &str,
+    ) -> Result<Vec<Container>, APIError> {
         println!("Deleting an ignite deployment");
-        panic!("not implemented!");
+
+        let response = self.client.get(
+            format!("/v1/ignite/deployments/{}/containers", deployment_id).as_str(),
+        ).await.unwrap();
+
+        let containers = response["data"]["containers"].to_owned();
+
+        return Ok(serde_json::from_value(containers).unwrap());
     }
 
+    // TODO: these
     // Gateways:
 
     pub async fn get_gateways(
@@ -183,6 +249,7 @@ impl Ignite {
 
     // Containers:
 
+    // TODO: this
     pub async fn create_container(
         &self,
     ) -> () {
