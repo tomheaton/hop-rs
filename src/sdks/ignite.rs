@@ -1,4 +1,4 @@
-use crate::{APIClient, APIError};
+use crate::{APIClient, APIError, APIResponseOld};
 use crate::types::ignite::{Container, ContainerState, CreateHealthCheckConfig, DeploymentConfig, DeploymentLog, HealthCheck, UpdateHealthCheckConfig};
 
 pub struct Ignite {
@@ -100,21 +100,37 @@ impl Ignite {
 
     pub async fn add_domain(
         &self,
-    ) -> () {
+        gateway_id: &str,
+        domain: &str,
+    ) -> Result<(), APIError> {
         println!("Adding a domain to an ignite gateway");
-        panic!("not implemented!");
+
+        self.client.post(
+            format!("/v1/ignite/gateways/{}/domains", gateway_id).as_str(),
+            serde_json::json!({
+                "domain": domain,
+            }),
+        ).await.unwrap();
+
+        return Ok(());
     }
 
-    // TODO: check these
+    pub async fn delete_domain(
+        &self,
+        gateway_id: &str,
+    ) -> Result<(), APIError> {
+        println!("Deleting an ignite deployment");
+
+        self.client.delete(
+            format!("/v1/ignite/gateways/{}/domains", gateway_id).as_str(),
+        ).await.unwrap();
+
+        return Ok(());
+    }
+
+    // TODO: check this
 
     /*pub async fn create_domain(
-        &self,
-    ) -> () {
-        println!("Deleting an ignite deployment");
-        panic!("not implemented!");
-    }*/
-
-    /*pub async fn delete_domain(
         &self,
     ) -> () {
         println!("Deleting an ignite deployment");
