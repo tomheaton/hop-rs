@@ -9,7 +9,7 @@ use dotenv::dotenv;
 use rand::Rng;
 
 use hop::Hop;
-use hop::types::ignite::{CreateHealthCheckConfig, DeploymentConfig, GatewayConfig, GatewayProtocol, GatewayType, HealthCheckProtocol, Image, Resources, RestartPolicy, RuntimeType, UpdateHealthCheckConfig};
+use hop::types::ignite::{CreateDeploymentConfig, CreateHealthCheckConfig, DeploymentConfig, GatewayConfig, GatewayProtocol, GatewayType, HealthCheckProtocol, Image, Resources, RestartPolicy, RuntimeType, UpdateHealthCheckConfig, VolumeDefinition, VolumeFormat};
 
 #[tokio::main]
 async fn main() {
@@ -92,33 +92,40 @@ async fn main() {
 
     // TODO: this
     // Example: Creating a deployment
-    // hop.ignite.create_deployment(
-    //     DeploymentConfig::new(
-    //         "postgres",
-    //         RuntimeType::Ephemeral,
-    //         None,
-    //         Image::new(
-    //             Some("postgres"),
-    //             None,
-    //             None,
-    //         ),
-    //         Some(HashMap::from([
-    //             ("POSTGRES_PASSWORD", "password")
-    //         ])),
-    //         Resources::new(
-    //             1,
-    //             "1GB",
-    //             vec![],
-    //             /*vec![
-    //                 Vgpu::new(
-    //                     VgpuType::A400,
-    //                     1,
-    //                 )
-    //             ],*/
-    //         ),
-    //         RestartPolicy::Never,
-    //         None,
-    //         None,
-    //     ),
-    // ).await;//.unwrap();
+    let deployment = hop.ignite.create_deployment(
+        CreateDeploymentConfig::new(
+            "postgres",
+            RuntimeType::Persistent,
+            None,
+            Image::new(
+                Some("postgres"),
+                None,
+                None,
+            ),
+            Some(HashMap::from([
+                ("POSTGRES_PASSWORD", "password")
+            ])),
+            Resources::new(
+                1f64,
+                "1GB",
+                Some(vec![]),
+                /*vec![
+                    Vgpu::new(
+                        VgpuType::A400,
+                        1,
+                    )
+                ],*/
+            ),
+            RestartPolicy::Never,
+            /*Some(VolumeDefinition {
+                fs: VolumeFormat::EXT4,
+                size: "512mb".to_string(),
+                mountpath: "/lol".to_string()      ,
+            }),*/
+            None,
+            None,
+        ),
+    ).await.unwrap();
+
+    println!("deployment: {:#?}", deployment);
 }

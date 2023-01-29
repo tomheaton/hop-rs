@@ -293,6 +293,78 @@ impl Deployment {
     }
 }
 
+#[derive(Debug, Serialize, Deserialize)]
+pub enum VolumeFormat {
+    #[serde(rename = "ext4")]
+    EXT4,
+    #[serde(rename = "xfs")]
+    XFS,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct VolumeDefinition {
+    pub fs: VolumeFormat,
+    // TODO: better type?
+    pub size: String,
+    // TODO: check if hop accepts my hop-js sdk fix
+    pub mountpath: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct CreateDeploymentConfig {
+    pub name: String,
+    pub container_strategy: ContainerStrategy,
+    #[serde(rename = "type")]
+    pub runtime_type: RuntimeType,
+    pub version: String,
+    pub cmd: Option<Vec<String>>,
+    pub image: Image,
+    pub env: Option<HashMap<String, String>>,
+    pub resources: Resources,
+    pub restart_policy: RestartPolicy,
+    // pub volume: Option<HashMap<String, String>>,
+    pub volume: Option<VolumeDefinition>,
+    // pub volume: Option<Vec<String>>,
+    pub entrypoint: Option<Vec<String>>,
+}
+
+impl CreateDeploymentConfig {
+    pub fn new(
+        name: &str,
+        // container_strategy: ContainerStrategy,
+        runtime_type: RuntimeType,
+        // version: String,
+        cmd: Option<Vec<String>>,
+        image: Image,
+        env: Option<HashMap<&str, &str>>,
+        resources: Resources,
+        restart_policy: RestartPolicy,
+        // volume: Option<&str>,
+        // TODO: check this still works
+        volume: Option<VolumeDefinition>,
+        entrypoint: Option<Vec<&str>>,
+    ) -> CreateDeploymentConfig {
+        return CreateDeploymentConfig {
+            name: name.to_owned(),
+            container_strategy: ContainerStrategy::Manual,
+            runtime_type: runtime_type.clone(),
+            version: "12-12-2022".to_owned(),
+            cmd,
+            image,
+            env: env.map(|e| e.into_iter().map(|(k, v)| (k.to_owned(), v.to_owned())).collect()),
+            resources,
+            restart_policy,
+            /*volume: match runtime_type {
+                RuntimeType::Stateful => volume.map(|v| v.to_owned()),
+                _ => None,
+            },*/
+            // TODO: check this still works
+            volume,
+            // volume: volume.map(|e| e.into_iter().map(|(k, v)| (k.to_owned(), v.to_owned())).collect()),
+            entrypoint: entrypoint.map(|e| e.into_iter().map(|e| e.to_owned()).collect()),
+        };
+    }
+}
 
 // TODO: remove option from hashmap and vec fields in struct but keep in constructor
 

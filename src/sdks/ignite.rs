@@ -1,5 +1,7 @@
-use crate::{APIClient, APIError, APIResponseOld};
-use crate::types::ignite::{Container, ContainerState, CreateHealthCheckConfig, Deployment, DeploymentConfig, DeploymentLog, Gateway, GatewayConfig, GatewayType, HealthCheck, Rollout, StorageStats, UpdateHealthCheckConfig};
+use crate::{APIClient, APIError, APIResponseOld, get_bytes};
+use crate::types::ignite::{Container, ContainerState, CreateDeploymentConfig, CreateHealthCheckConfig, Deployment, DeploymentConfig, DeploymentLog, Gateway, GatewayConfig, GatewayType, HealthCheck, Rollout, RuntimeType, StorageStats, UpdateHealthCheckConfig};
+
+const SIX_MB_IN_BYTES: i64 = 6 * 1024 * 1024;
 
 pub struct Ignite {
     pub token: String,
@@ -65,10 +67,33 @@ impl Ignite {
     // TODO: this
     pub async fn create_deployment(
         &self,
-        deployment: DeploymentConfig,
-    ) -> () {
-        println!("Creating an ignite deployment: {:?}", deployment);
-        panic!("not implemented!");
+        config: CreateDeploymentConfig,
+    ) -> Result<Deployment, APIError> {
+        println!("Creating an ignite deployment: {:?}", config);
+
+        if (get_bytes(config.resources.ram.as_str())) <= SIX_MB_IN_BYTES {
+            println!("Allocated memory must be greater than 6MB when creating a deployment.");
+            return Err(APIError);
+        }
+
+        if config.volume.is_some() && config.runtime_type.is_some() {
+            if config.runtime_type.unwrap() == RuntimeType::Stateful {
+                println!("Cannot create a deployment with a volume that is not stateful.");
+                return Err(APIError);
+            }
+        }
+
+        let data = serde_json::json!(config);
+
+
+        let response = self.client.post(
+            "/v1/ignite/deployments",
+            serde_json::json!(config),
+        ).await.unwrap();
+
+        let deployment = response["data"]["deployment"].to_owned();
+
+        return Ok(serde_json::from_value(deployment).unwrap());
     }
 
     pub async fn delete_deployment(
