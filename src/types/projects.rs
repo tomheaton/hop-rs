@@ -1,13 +1,13 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Role {
     flags: i64,
     id: String,
     name: String,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Member {
     id: String,
     joined_at: String,
@@ -17,7 +17,7 @@ pub struct Member {
     role: Role,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Secret {
     id: String,
     name: String,
@@ -25,5 +25,5 @@ pub struct Secret {
     created_at: String,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Token {}

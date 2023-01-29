@@ -1,7 +1,6 @@
 use crate::client::APIClient;
-use crate::client::BASE_URL as URL;
 use crate::types::APIError;
-use crate::types::projects::Member;
+use crate::types::projects::{Member, Secret, Token};
 
 pub struct Projects {
     pub token: String,
@@ -51,31 +50,41 @@ impl Projects {
         return Ok(serde_json::from_value(member).unwrap());
     }
 
+    // TODO: fix tokens (ask hop)
     // Tokens:
 
     pub async fn get_tokens(
         &self,
-    ) -> Result<serde_json::Value, APIError> {
+    ) -> Result<Vec<Token>, APIError> {
         println!("Getting all project tokens");
 
-        return self.client.get(
+        let response = self.client.get(
             "/v1/projects/@this/tokens"
-        ).await;
+        ).await.unwrap();
+
+        let tokens = response["data"]["tokens"].to_owned();
+
+        return Ok(serde_json::from_value(tokens).unwrap());
     }
 
     pub async fn create_token(
         &self,
+        // TODO: create util to create flags
         flags: i32,
-    ) -> Result<serde_json::Value, APIError> {
+    ) -> Result<Token, APIError> {
         println!("Creating a project token with flags: {}", flags);
 
-        return self.client.post(
+        let response = self.client.post(
             "/v1/projects/@this/tokens",
             // serde_json::json!(flags),
             serde_json::json!({
                 "flags": flags,
             }),
-        ).await;
+        ).await.unwrap();
+
+        let token = response["data"]["token"].to_owned();
+
+        return Ok(serde_json::from_value(token).unwrap());
     }
 
     pub async fn delete_token(
@@ -84,34 +93,44 @@ impl Projects {
     ) -> Result<(), APIError> {
         println!("Deleting a project token with id: {}", id);
 
-        return self.client.delete(
+        self.client.delete(
             format!("/v1/projects/@this/tokens/{}", id).as_str(),
-        ).await;
+        ).await.unwrap();
+
+        return Ok(());
     }
 
     // Secrets:
 
     pub async fn get_secrets(
         &self,
-    ) -> Result<serde_json::Value, APIError> {
+    ) -> Result<Vec<Secret>, APIError> {
         println!("Getting all project secrets");
 
-        return self.client.get(
+        let response = self.client.get(
             "/v1/projects/@this/secrets"
-        ).await;
+        ).await.unwrap();
+
+        let secrets = response["data"]["secrets"].to_owned();
+
+        return Ok(serde_json::from_value(secrets).unwrap());
     }
 
     pub async fn create_secret(
         &self,
         name: &str,
         value: String,
-    ) -> Result<serde_json::Value, APIError> {
+    ) -> Result<Secret, APIError> {
         println!("Creating a project secret with name: {} and value: {}", name, value);
 
-        return self.client.put_raw(
+        let response = self.client.put_raw(
             format!("/v1/projects/@this/secrets/{}", name).as_str(),
             value,
-        ).await;
+        ).await.unwrap();
+
+        let secret = response["data"]["secret"].to_owned();
+
+        return Ok(serde_json::from_value(secret).unwrap());
     }
 
     pub async fn delete_secret(
@@ -120,8 +139,10 @@ impl Projects {
     ) -> Result<(), APIError> {
         println!("Deleting a project secret with id: {}", id);
 
-        return self.client.delete(
+        self.client.delete(
             format!("/v1/projects/@this/secrets/{}", id).as_str(),
-        ).await;
+        ).await.unwrap();
+
+        return Ok(());
     }
 }
