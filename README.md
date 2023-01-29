@@ -38,4 +38,10 @@ async fn main() {
 
 ## Examples
 
+To run examples, add a Personal token and a Project token to the `.env` file.
+
+```bash
+cargo run --example <example_name>
+```
+
 Examples can be found [here](./examples).

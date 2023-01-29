@@ -11,12 +11,9 @@ use hop::Hop;
 
 #[tokio::main]
 async fn main() {
-    println!("hop");
-
     dotenv().ok();
 
-    // let my_token = "ptk_xxx";
-    // let my_token = env::var("PROJECT_TOKEN").expect("PROJECT_TOKEN needed!");
+    // let my_token = "pat_xxx";
     let my_token = env::var("PERSONAL_TOKEN").expect("PERSONAL_TOKEN needed!");
     let hop = Hop::new(my_token.as_str());
 

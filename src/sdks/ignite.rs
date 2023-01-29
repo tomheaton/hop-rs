@@ -1,8 +1,7 @@
-use crate::{APIClient, APIError, APIResponseOld, get_bytes};
+use crate::{APIClient, APIError, get_bytes};
 use crate::types::ignite::{Container, ContainerState, CreateDeploymentConfig, CreateHealthCheckConfig, Deployment, DeploymentConfig, DeploymentLog, Gateway, GatewayConfig, GatewayType, HealthCheck, Rollout, RuntimeType, StorageStats, UpdateHealthCheckConfig};
 
 const SIX_MB_IN_BYTES: i64 = 6 * 1024 * 1024;
-
 const VERSIONS: [&str; 4] = ["2022-05-17", "2022-10-19", "2022-12-12", "2022-12-28"];
 
 pub struct Ignite {
@@ -91,8 +90,8 @@ impl Ignite {
 
         let mut data = serde_json::json!(config);
 
+        // TODO: is this needed?
         if config.volume.is_none() {
-            // TODO: check this works
             data.as_object_mut().unwrap().remove("volume");
         }
 
