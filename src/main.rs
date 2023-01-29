@@ -90,12 +90,12 @@ async fn main() {
     // ).await.unwrap();
     // println!("gateway: {:#?}", gateway);
 
-    // TODO: this
     // Example: Creating a deployment
     let deployment = hop.ignite.create_deployment(
         CreateDeploymentConfig::new(
-            "postgres",
-            RuntimeType::Persistent,
+            "3postgres",
+            RuntimeType::Stateful,
+            "2022-12-28",
             None,
             Image::new(
                 Some("postgres"),
@@ -117,12 +117,12 @@ async fn main() {
                 ],*/
             ),
             RestartPolicy::Never,
-            /*Some(VolumeDefinition {
+            Some(VolumeDefinition {
                 fs: VolumeFormat::EXT4,
-                size: "512mb".to_string(),
-                mountpath: "/lol".to_string()      ,
-            }),*/
-            None,
+                size: "1GB".to_string(),
+                mountpath: "/lol".to_string(),
+            }),
+            // None,
             None,
         ),
     ).await.unwrap();

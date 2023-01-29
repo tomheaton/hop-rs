@@ -3,6 +3,8 @@ use crate::types::ignite::{Container, ContainerState, CreateDeploymentConfig, Cr
 
 const SIX_MB_IN_BYTES: i64 = 6 * 1024 * 1024;
 
+const VERSIONS: [&str; 4] = ["2022-05-17", "2022-10-19", "2022-12-12", "2022-12-28"];
+
 pub struct Ignite {
     pub token: String,
     pub client: APIClient,
@@ -71,24 +73,32 @@ impl Ignite {
     ) -> Result<Deployment, APIError> {
         println!("Creating an ignite deployment: {:?}", config);
 
+        // TODO: should this be here? it is here to match js sdk typed version
+        if !VERSIONS.contains(&config.version.as_str()) {
+            println!("Invalid version. Valid versions are: {:?}", VERSIONS);
+            return Err(APIError);
+        }
+
         if (get_bytes(config.resources.ram.as_str())) <= SIX_MB_IN_BYTES {
             println!("Allocated memory must be greater than 6MB when creating a deployment.");
             return Err(APIError);
         }
 
-        if config.volume.is_some() && config.runtime_type.is_some() {
-            if config.runtime_type.unwrap() == RuntimeType::Stateful {
-                println!("Cannot create a deployment with a volume that is not stateful.");
-                return Err(APIError);
-            }
+        if config.volume.is_some() && config.runtime_type != RuntimeType::Stateful {
+            println!("Cannot create a deployment with a volume that is not stateful.");
+            return Err(APIError);
         }
 
-        let data = serde_json::json!(config);
+        let mut data = serde_json::json!(config);
 
+        if config.volume.is_none() {
+            // TODO: check this works
+            data.as_object_mut().unwrap().remove("volume");
+        }
 
         let response = self.client.post(
             "/v1/ignite/deployments",
-            serde_json::json!(config),
+            serde_json::json!(data),
         ).await.unwrap();
 
         let deployment = response["data"]["deployment"].to_owned();

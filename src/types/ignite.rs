@@ -74,7 +74,7 @@ pub enum ContainerStrategy {
     Manual,
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub enum RuntimeType {
     #[serde(rename = "ephemeral")]
     Ephemeral,
@@ -258,7 +258,7 @@ pub struct Deployment {
     pub created_at: String,
     pub target_container_count: i64,
     pub container_count: i64,
-    pub running_container_count: i64,
+    pub running_container_count: Option<i64>,
     pub build_settings: Option<BuildSettings>,
     pub build_cache_enabled: bool,
     // TODO: this
@@ -333,7 +333,7 @@ impl CreateDeploymentConfig {
         name: &str,
         // container_strategy: ContainerStrategy,
         runtime_type: RuntimeType,
-        // version: String,
+        version: &str,
         cmd: Option<Vec<String>>,
         image: Image,
         env: Option<HashMap<&str, &str>>,
@@ -344,11 +344,15 @@ impl CreateDeploymentConfig {
         volume: Option<VolumeDefinition>,
         entrypoint: Option<Vec<&str>>,
     ) -> CreateDeploymentConfig {
+
+        // TODO: perform some light validation here?
+        //  such as version, volume, ram size
+
         return CreateDeploymentConfig {
             name: name.to_owned(),
             container_strategy: ContainerStrategy::Manual,
             runtime_type: runtime_type.clone(),
-            version: "12-12-2022".to_owned(),
+            version: version.to_owned(),
             cmd,
             image,
             env: env.map(|e| e.into_iter().map(|(k, v)| (k.to_owned(), v.to_owned())).collect()),
