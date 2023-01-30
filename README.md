@@ -1,6 +1,6 @@
 # hop-rs (wip)
 
-hop sdk rust
+Hop's Rust library. Requires Rust 1.61+
 
 ## Installation
 
