@@ -8,13 +8,13 @@ include = [
     "src/**/*",
     "Cargo.toml",
     "README.md",
-    #    "LICENSE.md",
+    "LICENSE.md",
 ]
 documentation = "https://docs.rs/hop"
 # TODO: move to hopinc
 homepage = "https://github.com/tomheaton/hop-rs"
 repository = "https://github.com/tomheaton/hop-rs"
-#license = "MIT"
+license = "MIT"
 
 [dependencies]
 serde_json = "1.0.70"
