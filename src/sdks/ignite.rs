@@ -1,5 +1,5 @@
 use crate::{APIClient, APIError, get_bytes};
-use crate::types::ignite::{Container, ContainerState, CreateDeploymentConfig, CreateHealthCheckConfig, Deployment, DeploymentConfig, DeploymentLog, Gateway, GatewayConfig, GatewayType, HealthCheck, Rollout, RuntimeType, StorageStats, UpdateHealthCheckConfig};
+use crate::types::ignite::{Container, ContainerState, CreateDeploymentConfig, CreateHealthCheckConfig, Deployment, DeploymentConfig, DeploymentLog, Gateway, GatewayConfig, GatewayType, HealthCheck, Rollout, RuntimeType, StorageStats, UpdateDeploymentConfig, UpdateHealthCheckConfig};
 
 const SIX_MB_IN_BYTES: i64 = 6 * 1024 * 1024;
 const VERSIONS: [&str; 4] = ["2022-05-17", "2022-10-19", "2022-12-12", "2022-12-28"];
@@ -65,7 +65,6 @@ impl Ignite {
         return Ok(serde_json::from_value(deployment).unwrap());
     }
 
-    // TODO: this
     pub async fn create_deployment(
         &self,
         config: CreateDeploymentConfig,
@@ -134,12 +133,24 @@ impl Ignite {
         return Ok(serde_json::from_value(rollout).unwrap());
     }
 
-    // TODO: this
+    // TODO: finish this
     pub async fn update_deployment(
         &self,
-    ) -> () {
+        deployment_id: &str,
+        config: UpdateDeploymentConfig,
+    ) -> Result<Deployment, APIError> {
         println!("Updating an ignite deployment");
-        panic!("not implemented!");
+
+        // TODO: remove None values from config?
+
+        let response = self.client.patch(
+            format!("/v1/ignite/deployments/{}", deployment_id).as_str(),
+            serde_json::json!(config),
+        ).await.unwrap();
+
+        let deployment = response["data"]["deployment"].to_owned();
+
+        return Ok(serde_json::from_value(deployment).unwrap());
     }
 
     pub async fn get_storage_stats(

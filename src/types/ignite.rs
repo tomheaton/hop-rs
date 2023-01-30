@@ -310,6 +310,25 @@ pub struct VolumeDefinition {
     pub mountpath: String,
 }
 
+// TODO: check this
+#[derive(Debug, Serialize, Deserialize)]
+pub struct UpdateDeploymentConfig {
+    pub name: Option<String>,
+    pub container_strategy: Option<ContainerStrategy>,
+    #[serde(rename = "type")]
+    pub runtime_type: Option<RuntimeType>,
+    pub version: Option<String>,
+    pub cmd: Option<Vec<String>>,
+    pub image: Option<Image>,
+    pub env: Option<HashMap<String, String>>,
+    pub resources: Option<Resources>,
+    pub restart_policy: Option<RestartPolicy>,
+    // pub volume: Option<HashMap<String, String>>,
+    pub volume: Option<VolumeDefinition>,
+    // pub volume: Option<Vec<String>>,
+    pub entrypoint: Option<Vec<String>>,
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CreateDeploymentConfig {
     pub name: String,
