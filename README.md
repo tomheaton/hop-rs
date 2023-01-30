@@ -11,7 +11,7 @@ hop = "0.0.0"
 
 ## Usage
 
-Create a [project token](https://docs.hop.io/reference/project_tokens) or personal access token.
+Create a [project token](https://docs.hop.io/reference/project-tokens) or personal access token.
 
 ```rust
 extern crate hop;
