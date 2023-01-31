@@ -2,12 +2,7 @@ use serde::Serialize;
 
 use crate::types::APIError;
 
-pub const BASE_URL: &str = "https://api.hop.io";
-
-// TODO: use this?
-pub struct APIClientTest<'a> {
-    pub token: &'a str,
-}
+const BASE_URL: &str = "https://api.hop.io";
 
 #[derive(Clone)]
 pub struct APIClient {

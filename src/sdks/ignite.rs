@@ -2,6 +2,7 @@ use crate::{APIClient, APIError, get_bytes};
 use crate::types::ignite::{Container, ContainerState, CreateDeploymentConfig, CreateHealthCheckConfig, Deployment, DeploymentConfig, DeploymentLog, Gateway, GatewayConfig, GatewayType, HealthCheck, Rollout, RuntimeType, StorageStats, UpdateDeploymentConfig, UpdateHealthCheckConfig};
 
 const SIX_MB_IN_BYTES: i64 = 6 * 1024 * 1024;
+// TODO: remove this and set version to one value (ask hop)
 const VERSIONS: [&str; 4] = ["2022-05-17", "2022-10-19", "2022-12-12", "2022-12-28"];
 
 pub struct Ignite {
