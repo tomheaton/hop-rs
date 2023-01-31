@@ -21,8 +21,6 @@ impl Pipe {
     pub async fn get_rooms(
         &self
     ) -> Result<Vec<Room>, APIError> {
-        println!("Getting all rooms");
-
         let response = self.client.get(
             "/v1/pipe/rooms"
         ).await.unwrap();
@@ -36,7 +34,6 @@ impl Pipe {
     /*pub async fn get_room(
         &self
     ) -> () {
-        println!("Getting a room");
         panic!("not implemented!");
     }*/
 
@@ -45,8 +42,6 @@ impl Pipe {
         name: &str,
         options: RoomOptions,
     ) -> Result<Room, APIError> {
-        println!("Creating a room");
-
         let mut config = serde_json::json!({
                 "name": name,
 
@@ -80,8 +75,6 @@ impl Pipe {
         &self,
         room_id: &str,
     ) -> Result<(), APIError> {
-        println!("Deleting a room");
-
         return self.client.delete(
             format!("/v1/pipe/rooms/{}", room_id).as_str()
         ).await;

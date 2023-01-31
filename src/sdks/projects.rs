@@ -22,8 +22,6 @@ impl Projects {
     pub async fn get_members(
         &self,
     ) -> Result<Vec<Member>, APIError> {
-        println!("Getting all project members");
-
         let response = self.client.get(
             "/v1/projects/@this/members"
         ).await.unwrap();
@@ -38,8 +36,6 @@ impl Projects {
         // TODO: add this
         // project_id: &str,
     ) -> Result<Member, APIError> {
-        println!("Getting current project member");
-
         let response = self.client.get(
             // format!("/v1/projects/{}/members/@me", project_id).as_str()
             "/v1/projects/@this/members/@me"
@@ -56,8 +52,6 @@ impl Projects {
     pub async fn get_tokens(
         &self,
     ) -> Result<Vec<Token>, APIError> {
-        println!("Getting all project tokens");
-
         let response = self.client.get(
             "/v1/projects/@this/tokens"
         ).await.unwrap();
@@ -72,8 +66,6 @@ impl Projects {
         // TODO: create util to create flags
         flags: i32,
     ) -> Result<Token, APIError> {
-        println!("Creating a project token with flags: {}", flags);
-
         let response = self.client.post(
             "/v1/projects/@this/tokens",
             // serde_json::json!(flags),
@@ -91,8 +83,6 @@ impl Projects {
         &self,
         id: &str,
     ) -> Result<(), APIError> {
-        println!("Deleting a project token with id: {}", id);
-
         self.client.delete(
             format!("/v1/projects/@this/tokens/{}", id).as_str(),
         ).await.unwrap();
@@ -105,8 +95,6 @@ impl Projects {
     pub async fn get_secrets(
         &self,
     ) -> Result<Vec<Secret>, APIError> {
-        println!("Getting all project secrets");
-
         let response = self.client.get(
             "/v1/projects/@this/secrets"
         ).await.unwrap();
@@ -121,8 +109,6 @@ impl Projects {
         name: &str,
         value: String,
     ) -> Result<Secret, APIError> {
-        println!("Creating a project secret with name: {} and value: {}", name, value);
-
         let response = self.client.put_raw(
             format!("/v1/projects/@this/secrets/{}", name).as_str(),
             value,
@@ -137,8 +123,6 @@ impl Projects {
         &self,
         id: &str,
     ) -> Result<(), APIError> {
-        println!("Deleting a project secret with id: {}", id);
-
         self.client.delete(
             format!("/v1/projects/@this/secrets/{}", id).as_str(),
         ).await.unwrap();

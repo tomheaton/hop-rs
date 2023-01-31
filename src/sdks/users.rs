@@ -24,8 +24,6 @@ impl Users {
     pub async fn get_me(
         &self,
     ) -> Result<User, APIError> {
-        println!("Getting user information");
-
         let response = self.client.get(
             "/v1/users/@me"
         ).await.unwrap();
@@ -40,8 +38,6 @@ impl Users {
     pub async fn get_pats(
         &self,
     ) -> Result<Vec<Pat>, APIError> {
-        println!("Getting user pats");
-
         let response = self.client.get(
             "/v1/users/@me/pats"
         ).await.unwrap();
@@ -55,8 +51,6 @@ impl Users {
         &self,
         name: &str,
     ) -> Result<Pat, APIError> {
-        println!("Creating a user pat with name: {}", name);
-
         // TODO: fix invalid route error (actually just dumb)
         let response = self.client.post(
             "/v1/users/@me/pats",
@@ -75,8 +69,6 @@ impl Users {
         &self,
         id: &str,
     ) -> Result<(), APIError> {
-        println!("Deleting a user pat with id: {}", id);
-
         // TODO: fix invalid route error (actually just dumb)
         self.client.delete(
             format!("/v1/users/@me/pats/{}", id).as_str()

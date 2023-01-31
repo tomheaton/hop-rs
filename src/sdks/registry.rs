@@ -21,10 +21,9 @@ impl Registry {
 
     pub async fn get_images(
         &self
+        // TODO: add image return here
         // ) -> Result<Vec<Image>, APIError> {
     ) -> Result<Vec<String>, APIError> {
-        println!("Getting all images");
-
         let response = self.client.get(
             "/v1/registry/images"
         ).await.unwrap();
@@ -38,8 +37,6 @@ impl Registry {
         &self,
         image: &str,
     ) -> Result<(), APIError> {
-        println!("Deleting an image with image: {}", image);
-
         self.client.delete(
             format!("/v1/registry/images/{}", image).as_str(),
         ).await.unwrap();
@@ -51,8 +48,6 @@ impl Registry {
         &self,
         image: &str,
     ) -> Result<Vec<Image>, APIError> {
-        println!("Getting image manifest");
-
         let response = self.client.get(
             format!("/v1/registry/{}/manifest", image).as_str(),
         ).await.unwrap();

@@ -103,8 +103,6 @@ impl Channels {
         channel_id: &str,
         // TODO: improve this (ask hop about this)
     ) -> Result<HashMap<String, i64>, APIError> {
-        println!("Getting a channel's stats");
-
         let response = self.client.get(
             format!("/v1/channels/{}/stats", channel_id).as_str()
         ).await.unwrap();
@@ -119,8 +117,6 @@ impl Channels {
         channel_id: &str,
         tokens: Vec<&str>,
     ) -> Result<(), APIError> {
-        println!("Subscribing tokens to channel");
-
         for token in tokens {
             self.client.put_none(
                 format!("/v1/channels/{}/subscribers/{}", channel_id, token).as_str(),
@@ -135,8 +131,6 @@ impl Channels {
         channel_id: &str,
         token_id: &str,
     ) -> Result<(), APIError> {
-        println!("Subscribing token to channel");
-
         self.client.put_none(
             format!("/v1/channels/{}/subscribers/{}", channel_id, token_id).as_str(),
         ).await.unwrap();
@@ -147,8 +141,6 @@ impl Channels {
     /*pub async fn get_tokens(
         &self
     ) -> Result<HashMap<String, i64>, APIError> {
-        println!("Getting all channel tokens");
-
         let response =self.client.get(
             format!("/v1/channels/{}/tokens", channel_id).as_str()
         ).await.unwrap();
@@ -163,8 +155,6 @@ impl Channels {
         channel_id: &str,
         state: HashMap<String, String>,
     ) -> Result<(), APIError> {
-        println!("Setting channel state");
-
         self.client.put(
             format!("/v1/channels/{}/state", channel_id).as_str(),
             serde_json::json!(state),
@@ -178,8 +168,6 @@ impl Channels {
         channel_id: &str,
         state: HashMap<String, String>,
     ) -> Result<(), APIError> {
-        println!("Patching channel state");
-
         self.client.patch(
             format!("/v1/channels/{}/state", channel_id).as_str(),
             serde_json::json!(state),
@@ -194,8 +182,6 @@ impl Channels {
         event: &str,
         data: HashMap<String, String>,
     ) -> Result<(), APIError> {
-        println!("Publishing a channel message");
-
         self.client.post(
             format!("/v1/channels/{}/messages", channel_id).as_str(),
             serde_json::json!({
@@ -213,8 +199,6 @@ impl Channels {
         &self,
         token_id: &str,
     ) -> Result<ChannelToken, APIError> {
-        println!("Getting a channel token");
-
         let response = self.client.get(
             format!("/v1/channels/tokens/{}", token_id).as_str()
         ).await.unwrap();
@@ -224,14 +208,15 @@ impl Channels {
         return Ok(serde_json::from_value(token).unwrap());
     }
 
+    // TODO: check this function
     pub async fn create_token(
         &self,
         // TODO: use raw serde_json here to allow any value?
         state: Option<HashMap<String, String>>,
         // state: impl Into<Option<HashMap<String, String>>>,
     ) -> Result<ChannelToken, APIError> {
+        // TODO use into here?
         // let state = state.into();
-        println!("Creating a channel token");
 
         // TODO: inline this? (intellisense not available inside the macro)
         let state = state.unwrap_or(HashMap::new());
@@ -240,8 +225,6 @@ impl Channels {
             "/v1/channels/tokens",
             serde_json::json!(state),
         ).await.unwrap();
-
-        println!("response: {:?}", response);
 
         let mut token = response["data"]["token"].clone();
         token["is_online"] = serde_json::json!(true);
@@ -253,8 +236,6 @@ impl Channels {
         &self,
         token_id: &str,
     ) -> Result<(), APIError> {
-        println!("Deleting a channel token");
-
         return self.client.delete(
             format!("/v1/channels/tokens/{}", token_id).as_str()
         ).await;
@@ -265,14 +246,10 @@ impl Channels {
         token_id: &str,
         state: HashMap<String, String>,
     ) -> Result<ChannelToken, APIError> {
-        println!("Setting a channel token's state");
-
         let response = self.client.patch(
             format!("/v1/channels/tokens/{}", token_id).as_str(),
             serde_json::json!(state),
         ).await.unwrap();
-
-        println!("response: {:?}", response);
 
         let mut token = response["data"]["token"].clone();
         token["is_online"] = serde_json::json!(true);
@@ -294,7 +271,6 @@ impl Channels {
         let token = serde_json::from_value::<ChannelToken>(token).unwrap();
 
         return Ok(token.is_online);
-        // return Ok(token.is_online.unwrap());
     }
 
     pub async fn publish_direct_message(
@@ -303,8 +279,6 @@ impl Channels {
         event: &str,
         data: HashMap<String, String>,
     ) -> Result<(), APIError> {
-        println!("Publishing a direct message to a channel token");
-
         self.client.post(
             format!("/v1/channels/tokens/{}/messages", token_id).as_str(),
             serde_json::json!({
