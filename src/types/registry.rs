@@ -1,5 +1,6 @@
 use serde::{Deserialize, Serialize};
 
+// TODO: check this
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Image {}
 

@@ -11,14 +11,3 @@ pub mod users;
 #[derive(Debug, Serialize, Deserialize)]
 pub struct APIError;
 
-#[derive(Debug, Serialize, Deserialize)]
-pub struct APIResponse<T> {
-    pub success: bool,
-    pub data: Option<T>,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct APIResponseOld {
-    success: bool,
-    message: String,
-}

@@ -25,5 +25,6 @@ pub struct Secret {
     created_at: String,
 }
 
+// TODO: check this
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Token {}
