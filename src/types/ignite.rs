@@ -221,6 +221,10 @@ impl Gateway {
     }
 }
 
+// TODO: this
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Build {}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct BuildSettings {
     pub root_directory: Option<String>,

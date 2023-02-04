@@ -108,6 +108,22 @@ impl Ignite {
         return Ok(());
     }
 
+    // TODO: test this
+    pub async fn patch_metadata(
+        &self,
+        deployment_id: &str,
+        metadata: serde_json::Value,
+    ) -> Result<Deployment, APIError> {
+        let response = self.client.patch(
+            format!("/v1/ignite/deployments/{}/metadata", deployment_id).as_str(),
+            serde_json::json!(metadata),
+        ).await.unwrap();
+
+        let deployment = response["data"]["deployment"].to_owned();
+
+        return Ok(serde_json::from_value(deployment).unwrap());
+    }
+
     pub async fn rollout_deployment(
         &self,
         deployment_id: &str,
