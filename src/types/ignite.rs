@@ -223,6 +223,16 @@ impl Gateway {
 
 // TODO: this
 #[derive(Debug, Serialize, Deserialize)]
+pub struct PatchDeploymentMetadata {
+    // TODO: add this
+    // pub container_port_mappings: Option<Record<Id<'container'>, string[]>>,
+    pub ignored_boarding: Option<bool>,
+    pub created_from_preset: Option<String>,
+    pub created_first_gateway: Option<bool>,
+}
+
+// TODO: this
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Build {}
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -230,6 +240,7 @@ pub struct BuildSettings {
     pub root_directory: Option<String>,
 }
 
+// TODO: check this
 #[derive(Debug, Serialize, Deserialize)]
 pub struct DeploymentMetaData {
     pub root_directory: Option<String>,
