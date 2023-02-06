@@ -1,35 +1,6 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
-pub enum IngestProtocol {
-    #[serde(rename = "rtmp")]
-    RTMP,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub enum DeliveryProtocol {
-    #[serde(rename = "webrtc")]
-    WebRTC,
-    // TODO: check with hop
-    // #[serde(rename = "hls")]
-    // HLS,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub enum Region {
-    #[serde(rename = "us-east-1")]
-    USEast1,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub enum RoomState {
-    #[serde(rename = "live")]
-    Live,
-    #[serde(rename = "offline")]
-    Offline,
-}
-
-// #[derive(Debug, Serialize, Deserialize)]
 pub struct Room {
     /// The ID of this stream
     pub id: String,
@@ -71,4 +42,33 @@ pub struct HLSConfig {
     pub wcl_delay: i64,
     pub artificial_id: i64,
     pub max_playout_bitrate_preset: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub enum IngestProtocol {
+    #[serde(rename = "rtmp")]
+    RTMP,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub enum DeliveryProtocol {
+    #[serde(rename = "webrtc")]
+    WebRTC,
+    // TODO: check with hop
+    // #[serde(rename = "hls")]
+    // HLS,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub enum Region {
+    #[serde(rename = "us-east-1")]
+    USEast1,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub enum RoomState {
+    #[serde(rename = "live")]
+    Live,
+    #[serde(rename = "offline")]
+    Offline,
 }
