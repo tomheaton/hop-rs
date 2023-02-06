@@ -29,16 +29,25 @@ pub enum RoomState {
     Offline,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+// #[derive(Debug, Serialize, Deserialize)]
 pub struct Room {
+    /// The ID of this stream
     pub id: String,
+    /// The name of this room
     pub name: String,
+    /// The unix timestamp of when this stream was created
     pub created_at: String,
+    /// Protocol you can stream with
     pub ingest_protocol: IngestProtocol,
+    /// Protocols that are supported by this room to the client
     pub delivery_protocols: Vec<DeliveryProtocol>,
+    /// A join token to subscribe into this room
     pub join_token: String,
+    /// The region that the stream url is located in
     pub ingest_region: Region,
+    /// The URL that you can stream to
     pub ingest_endpoint: String,
+    /// The state of the stream currently
     pub state: RoomState,
 }
 
