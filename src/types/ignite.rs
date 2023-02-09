@@ -54,7 +54,8 @@ impl Vgpu {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-/// Container state is relatively self-explanatory. It describes what the container is currently doing.
+/// Container state is relatively self-explanatory.
+/// It describes what the container is currently doing.
 pub enum ContainerState {
     #[serde(rename = "pending")]
     /// The container is pending creation
@@ -86,13 +87,16 @@ pub enum ContainerStrategy {
 /// Runtime types are used to describe the type of a deployment or container
 pub enum RuntimeType {
     #[serde(rename = "ephemeral")]
-    /// Ephemeral deployments/containers are sort of fire and forget. Containers won't restart if they exit but they can still be terminated programmatically.
+    /// Ephemeral deployments/containers are sort of fire and forget.
+    /// Containers won't restart if they exit but they can still be terminated programmatically.
     Ephemeral,
     #[serde(rename = "persistent")]
-    /// Persistent deployments/containers will restart if they exit. They can also be started and stopped programmatically.
+    /// Persistent deployments/containers will restart if they exit.
+    /// They can also be started and stopped programmatically.
     Persistent,
     #[serde(rename = "stateful")]
-    /// Stateful deployments/containers can only run one container at a time, and will have a persistent volume attached.
+    /// Stateful deployments/containers can only run one container at a time, and will have a
+    /// persistent volume attached.
     Stateful,
 }
 
@@ -276,22 +280,36 @@ pub struct DeploymentRollout {}
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Deployment {
+    /// The ID of the deployment
     pub id: String,
+    /// The name of the deployment
     pub name: String,
-    pub build_id: Option<String>,
-    pub active_build: Option<String>,
-    pub active_rollout: Option<String>,
-    // TODO: this
-    // pub latest_rollout: Option<DeploymentRollout>,
-    pub created_at: String,
-    pub target_container_count: i64,
+    /// The amount of containers this deployment is currently running
     pub container_count: i64,
-    pub running_container_count: Option<i64>,
-    pub build_settings: Option<BuildSettings>,
-    pub build_cache_enabled: bool,
-    // TODO: this
-    // pub metadata: Option<String>,
+    /// The time this deployment was created at
+    pub created_at: String,
+    /// The config for this deployment
     pub config: DeploymentConfig,
+    /// Current active rollout for deployment
+    pub active_rollout: Option<String>,
+    /// Current active build for deployment
+    pub active_build: Option<String>,
+    /// The ID of the build currently being used in production by this deployment.
+    /// This will change if another build has been promoted to production.
+    pub build_id: Option<String>,
+    // TODO: this
+    // /// Current active rollout for deployment
+    // pub latest_rollout: Option<DeploymentRollout>,
+    pub target_container_count: i64,
+    /// The amount of containers in the running state
+    pub running_container_count: Option<i64>,
+    // TODO: this
+    // /// Metadata for deployment
+    // pub metadata: Option<String>,
+    /// Build cache settings for deployment
+    pub build_cache_enabled: bool,
+    /// Build settings for deployment
+    pub build_settings: Option<BuildSettings>,
 }
 
 impl Deployment {
