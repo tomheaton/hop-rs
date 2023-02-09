@@ -28,6 +28,7 @@ impl Resources {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+///  * Types for supported GPU
 pub enum VgpuType {
     #[serde(rename = "a400")]
     A400,
@@ -53,18 +54,25 @@ impl Vgpu {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+/// Container state is relatively self-explanatory. It describes what the container is currently doing.
 pub enum ContainerState {
     #[serde(rename = "pending")]
+    /// The container is pending creation
     Pending,
     #[serde(rename = "running")]
+    /// The container is running
     Running,
     #[serde(rename = "stopped")]
+    /// The container is stopped
     Stopped,
     #[serde(rename = "failed")]
+    /// The container's entrypoint failed (e.g. exited with a non-zero exit code)
     Failed,
     #[serde(rename = "terminating")]
+    /// The container is being deleted
     Terminating,
     #[serde(rename = "exited")]
+    /// The container exited (e.g. with a zero exit code)
     Exited,
 }
 
@@ -75,16 +83,21 @@ pub enum ContainerStrategy {
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
+/// Runtime types are used to describe the type of a deployment or container
 pub enum RuntimeType {
     #[serde(rename = "ephemeral")]
+    /// Ephemeral deployments/containers are sort of fire and forget. Containers won't restart if they exit but they can still be terminated programmatically.
     Ephemeral,
     #[serde(rename = "persistent")]
+    /// Persistent deployments/containers will restart if they exit. They can also be started and stopped programmatically.
     Persistent,
     #[serde(rename = "stateful")]
+    /// Stateful deployments/containers can only run one container at a time, and will have a persistent volume attached.
     Stateful,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+///  * Restart policy for deployments
 pub enum RestartPolicy {
     #[serde(rename = "never")]
     Never,
@@ -318,10 +331,13 @@ pub enum VolumeFormat {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct VolumeDefinition {
+    /// The format of the volume
     pub fs: VolumeFormat,
     // TODO: better type?
+    /// The size of the volume in bytes
     pub size: String,
     // TODO: check if hop accepts my hop-js sdk fix
+    /// The mount point of the volume
     pub mountpath: String,
 }
 
@@ -461,14 +477,21 @@ impl DeploymentConfig {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Container {
+    /// The ID of the container
     pub id: String,
+    /// The time this container was created
     pub created_at: String,
+    /// The region this container runs in
     pub region: Region,
+    /// The state this container is in
     pub state: ContainerState,
     pub deployment_id: String,
     pub internal_ip: Option<String>,
+    // TODO: fix uptime to struct with `last_start`
+    /// Information about uptime/downtime for this container
     pub uptime: Option<String>,
     #[serde(rename = "type")]
+    /// The type of this container
     pub runtime_type: RuntimeType,
 }
 
